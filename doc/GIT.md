@@ -1,2 +1,3 @@
 # Änderungen speichern
-git commit origin master
+1. Änderungen commiten
+2. git commit origin master
