@@ -30,11 +30,12 @@ public class Pacman implements ApplicationListener {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		texture = new Texture(Gdx.files.internal("pacman4.0.png"));
+		texture = new Texture(Gdx.files.internal("pacman5.0.png"));
 
-		regions[0] = new TextureRegion(texture, 0, 0, 192, 193);		// #3
-		regions[1] = new TextureRegion(texture, 192, 0, 192, 193);	// #4
-		regions[2] = new TextureRegion(texture, 384, 0, 192, 193);		// #5
+		regions[0] = new TextureRegion(texture, 0, 0, 16, 16);        // #3
+		regions[1] = new TextureRegion(texture, 16, 0, 16, 16);    // #4
+		regions[2] = new TextureRegion(texture, 32, 0, 16, 16);        // #5
+		regions[3] = new TextureRegion(texture, 48, 0, 16, 16);        // #5
 
 		animation = new Animation<TextureRegion>(0.2f, regions);
 		stateTime = 0f;
@@ -101,6 +102,7 @@ public class Pacman implements ApplicationListener {
 				y += 10;
 			}
 		}
+
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			if (y < 0) {
 				y = y;
@@ -109,10 +111,13 @@ public class Pacman implements ApplicationListener {
 			}
 		}
 
+
 		batch.begin();
-		batch.draw(sprite, x, y);
+		batch.draw(sprite,x,y);
 		batch.end();
-	}
+
+}
+
 
 	@Override
 	public void resize(int width, int height) {

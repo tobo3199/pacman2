@@ -12,7 +12,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "My game";
 		config.width = 1800;
-		config.height = 1480;
+		config.height = 1600;
 		new LwjglApplication(new TiledTest2(), config);
 		//new LwjglApplication(new Pacman(), config);
 	}

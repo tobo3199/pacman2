@@ -3,6 +3,7 @@ package pacman.game;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -46,4 +47,14 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
         }
         endRender();
     }
+
+    @Override
+    public void renderObject(MapObject object) {
+        if(object instanceof TextureMapObject) {
+            TextureMapObject textureObj = (TextureMapObject) object;
+            batch.draw(textureObj.getTextureRegion(), textureObj.getX(), textureObj.getY());
+        }
+    }
+
+
 }

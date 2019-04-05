@@ -7,15 +7,16 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 
 public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
@@ -27,8 +28,8 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     Texture texture;
     Sprite sprite;
     MapLayer objectLayer;
-
-    TextureRegion textureRegion;
+    TextureRegion[] regions = new TextureRegion[3];
+    Animation<TextureRegion> animation;
 
     @Override
     public void create () {
@@ -38,15 +39,21 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         camera = new OrthographicCamera();
         camera.setToOrtho(false,w,h);
         camera.update();
-        tiledMap = new TmxMapLoader().load("pacman.tmx");
+
+        tiledMap = new TmxMapLoader().load("pacmanA.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(tiledMap);
         Gdx.input.setInputProcessor(this);
-        texture = new Texture(Gdx.files.internal("mario.jpg"));
 
         objectLayer = tiledMap.getLayers().get("objects");
-        textureRegion = new TextureRegion(texture,64,64);
+        texture = new Texture(Gdx.files.internal("pacman4.0.png"));
 
-        TextureMapObject tmo = new TextureMapObject(textureRegion);
+        regions[0] = new TextureRegion(texture, 0, 0, 192, 193);        // #3
+        regions[1] = new TextureRegion(texture, 192, 0, 192, 193);    // #4
+        regions[2] = new TextureRegion(texture, 384, 0, 192, 193);        // #5
+
+        animation = new Animation<TextureRegion>(0.2f, regions);
+
+        TextureMapObject tmo = new TextureMapObject(regions[0]);
         tmo.setX(0);
         tmo.setY(0);
         objectLayer.getObjects().add(tmo);
@@ -95,6 +102,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         Vector3 clickCoordinates = new Vector3(screenX,screenY,0);
         Vector3 position = camera.unproject(clickCoordinates);
         TextureMapObject character = (TextureMapObject)tiledMap.getLayers().get("objects").getObjects().get(0);
+        //character.getRectangle().set(position.x, position.y, 10, 10);
         character.setX((float)position.x);
         character.setY((float)position.y);
         return true;
