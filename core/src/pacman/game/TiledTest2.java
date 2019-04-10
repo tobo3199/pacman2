@@ -18,6 +18,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+
 
 public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     Texture img;
@@ -28,16 +30,17 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     Texture texture;
     Sprite sprite;
     MapLayer objectLayer;
+    MapLayer wallLayer;
     TextureRegion[] regions = new TextureRegion[3];
     Animation<TextureRegion> animation;
 
     @Override
-    public void create () {
+    public void create() {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,w,h);
+        camera.setToOrtho(false, w, h);
         camera.update();
 
         tiledMap = new TmxMapLoader().load("pacmanA.tmx");
@@ -45,7 +48,8 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         Gdx.input.setInputProcessor(this);
 
         objectLayer = tiledMap.getLayers().get("objects");
-        texture = new Texture(Gdx.files.internal("pacman4.0.png"));
+        wallLayer = tiledMap.getLayers().get("wall");
+        texture = new Texture(Gdx.files.internal("pacmanY.png"));
 
         regions[0] = new TextureRegion(texture, 0, 0, 192, 193);        // #3
         regions[1] = new TextureRegion(texture, 192, 0, 192, 193);    // #4
@@ -57,10 +61,13 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         tmo.setX(0);
         tmo.setY(0);
         objectLayer.getObjects().add(tmo);
+
+
+        //private Box2DDebugRenderer b2dr;
     }
 
     @Override
-    public void render () {
+    public void render() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -76,26 +83,26 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.LEFT)
-            camera.translate(-32,0);
-        if(keycode == Input.Keys.RIGHT)
-            camera.translate(32,0);
-        if(keycode == Input.Keys.UP)
-            camera.translate(0,-32);
-        if(keycode == Input.Keys.DOWN)
-            camera.translate(0,32);
-        if(keycode == Input.Keys.NUM_1)
-            tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
-        if(keycode == Input.Keys.NUM_2)
-            tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
+        //if(keycode == Input.Keys.LEFT)
+        //camera.translate(-32,0);
+        //if(keycode == Input.Keys.RIGHT)
+        //camera.translate(32,0);
+        //if(keycode == Input.Keys.UP)
+        //camera.translate(0,-32);
+        //if(keycode == Input.Keys.DOWN)
+        //camera.translate(0,32);
+        //if(keycode == Input.Keys.NUM_1)
+        //tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
+        //if(keycode == Input.Keys.NUM_2)
+        //tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
         return false;
     }
 
     @Override
-    public boolean keyTyped(char character) {
+    public boolean keyTyped(char character){
 
         return false;
-    }
+        }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
