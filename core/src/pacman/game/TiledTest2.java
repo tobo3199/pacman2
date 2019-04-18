@@ -23,6 +23,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
+//import java.util.Objects;
+
 
 public class TiledTest2 extends ApplicationAdapter {
     Texture img;
@@ -34,6 +36,8 @@ public class TiledTest2 extends ApplicationAdapter {
     private Sprite sprite;
     MapLayer objectLayer;
     MapLayer wallLayer;
+    private Rectangle rectanglepacmanY;
+    private Rectangle wall;
 
     //Animation<TextureRegion> animation;
     TextureRegion[] regions = new TextureRegion[4];
@@ -42,7 +46,7 @@ public class TiledTest2 extends ApplicationAdapter {
     int x = 0;
     int y = 0;
     private SpriteBatch batch;
-    int translate;
+
 
 
     @Override
@@ -84,6 +88,9 @@ public class TiledTest2 extends ApplicationAdapter {
                 //System.out.println("Not Overlap");
             }
         }
+        wall = new Rectangle(wall.getX(),wall.getY(),wall.getWidth(),wall.getHeight());
+        rectanglepacmanY = new Rectangle(64f, 64f, 64f,64f);
+
     }
 
     @Override
@@ -106,104 +113,67 @@ public class TiledTest2 extends ApplicationAdapter {
         TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
         character.setTextureRegion(currentFrame);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            if (x <= 0) {
-                x = x;
-            } else {
-                x -= 10;
+        boolean isOverlapping = rectanglepacmanY.overlaps(wall);
+
+        if(!isOverlapping) {
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                if (x <= 0) {
+                    x = x;
+                } else {
+                    x -= 10;
 
                 /*if (!sprite.isFlipX()) {
                     flipX();
                 }*/
-            }
+                }
 
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            if (x > 1600) {
-                x = x;
-            } else {
-                x += 10;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                if (x > 1600) {
+                    x = x;
+                } else {
+                    x += 10;
 
                 /*if (sprite.isFlipX()) {
                     flipX();
                 }*/
+                }
+
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                if (y > 1400) {
+                    y = y;
+                } else {
+                    y += 10;
+                }
             }
 
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            if (y > 1400) {
-                y = y;
-            } else {
-                y += 10;
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                if (y < 0) {
+                    y = y;
+                } else {
+                    y -= 10;
+                }
             }
+
+            character.setX(x);
+            character.setY(y);
+
+            camera.update();
+            tiledMapRenderer.setView(camera);
+            tiledMapRenderer.render();
+
+
+            //sprite = new Sprite(currentFrame);
+
+            // batch.begin();
+            // batch.draw(sprite,x,y);
+            // batch.end();
+
         }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            if (y < 0) {
-                y = y;
-            } else {
-                y -= 10;
-            }
-        }
-
-        character.setX(x);
-        character.setY(y);
-
-        camera.update();
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
-
-
-        //sprite = new Sprite(currentFrame);
-
-        // batch.begin();
-       // batch.draw(sprite,x,y);
-       // batch.end();
     }
 
-    //@Override
-    public boolean keyDown(int keycode) {
-        /*System.out.println(keycode);
-        TextureMapObject character = (TextureMapObject)tiledMap.getLayers().get("objects").getObjects().get(0);
-        float x = character.getX();
-        float y = character.getY();
 
-        if(keycode == Input.Keys.LEFT) {
-            if (x <= 0) {
-                x = x;
-            } else {
-                x -= 10;
-            }
-        }
-
-        if(keycode == Input.Keys.RIGHT) {
-            if (x > 1600) {
-                x = x;
-            } else {
-                x += 10;
-            }
-        }
-
-        if(keycode == Input.Keys.UP) {
-            if (y > 1280) {
-                y = y;
-            } else {
-                y += 10;
-            }
-        }
-
-        if(keycode == Input.Keys.DOWN) {
-            if (y < 0) {
-                y = y;
-            } else {
-                y -= 10;
-            }
-        }
-
-        character.setX(x);
-        character.setY(y);*/
-        return false;
-    }
 
     //@Override
     public boolean keyUp(int keycode) {
@@ -263,4 +233,9 @@ public class TiledTest2 extends ApplicationAdapter {
     public boolean scrolled(int amount) {
         return false;
     }
+
+
+
 }
+
+
