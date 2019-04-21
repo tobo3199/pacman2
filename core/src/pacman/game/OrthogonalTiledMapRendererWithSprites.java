@@ -52,7 +52,10 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
     public void renderObject(MapObject object) {
         if(object instanceof TextureMapObject) {
             TextureMapObject textureObj = (TextureMapObject) object;
-            batch.draw(textureObj.getTextureRegion(), textureObj.getX(), textureObj.getY());
+            Sprite sprite = new Sprite(textureObj.getTextureRegion());
+            sprite.rotate(90);
+            sprite.setPosition(textureObj.getX(), textureObj.getY());
+            sprite.draw(batch);
         }
     }
 

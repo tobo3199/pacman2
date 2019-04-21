@@ -18,6 +18,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -47,8 +48,6 @@ public class TiledTest2 extends ApplicationAdapter {
     int y = 0;
     private SpriteBatch batch;
 
-
-
     @Override
     public void create() {
         float w = Gdx.graphics.getWidth();
@@ -60,7 +59,6 @@ public class TiledTest2 extends ApplicationAdapter {
 
         tiledMap = new TmxMapLoader().load("pacmanA.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(tiledMap);
-        //Gdx.input.setInputProcessor(this);
 
         objectLayer = tiledMap.getLayers().get("objects");
         wallLayer = tiledMap.getLayers().get("wall");
@@ -75,22 +73,21 @@ public class TiledTest2 extends ApplicationAdapter {
 
         TextureMapObject tmo = new TextureMapObject(regions[0]);
         tmo.setX(200);
-        tmo.setY(200);
+        tmo.setY(470);
         objectLayer.getObjects().add(tmo);
 
+
+    }
+
+    private boolean isOverlapping(Rectangle rectangle) {
         MapObjects retangles = wallLayer.getObjects();
-        Rectangle rectangle = new Rectangle();
 
         for (MapObject retangle : retangles) {
             if (((RectangleMapObject) retangle).getRectangle().overlaps(rectangle)) {
-                System.out.println("Overlap");
-            } else {
-                //System.out.println("Not Overlap");
+                return true;
             }
         }
-        wall = new Rectangle(wall.getX(),wall.getY(),wall.getWidth(),wall.getHeight());
-        rectanglepacmanY = new Rectangle(64f, 64f, 64f,64f);
-
+        return false;
     }
 
     @Override
@@ -113,55 +110,65 @@ public class TiledTest2 extends ApplicationAdapter {
         TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
         character.setTextureRegion(currentFrame);
 
-        boolean isOverlapping = rectanglepacmanY.overlaps(wall);
+        character.setRotation(270);
+        character.setOriginX(32);
+        character.setOriginY(32);
 
-        if(!isOverlapping) {
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                if (x <= 0) {
-                    x = x;
-                } else {
-                    x -= 10;
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            if (x <= 0) {
+                x = x;
+            } else {
+                x -= 10;
 
-                /*if (!sprite.isFlipX()) {
+                if (!currentFrame.isFlipX()) {
                     flipX();
-                }*/
                 }
-
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                if (x > 1600) {
-                    x = x;
-                } else {
-                    x += 10;
 
-                /*if (sprite.isFlipX()) {
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            if (x > 1700) {
+                x = x;
+            } else {
+                x += 10;
+
+                if (currentFrame.isFlipX()) {
                     flipX();
-                }*/
-                }
-
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                if (y > 1400) {
-                    y = y;
-                } else {
-                    y += 10;
                 }
             }
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if (y > 1400) {
+                y = y;
+            } else {
+                y += 10;
+            }
+        }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                if (y < 0) {
-                    y = y;
-                } else {
-                    y -= 10;
-                }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            if (y < 0) {
+                y = y;
+            } else {
+                y -= 10;
+            }
+        }
+
+            Rectangle rectangle = new Rectangle();
+            rectangle.setX(x+10);
+            rectangle.setY(y+10);
+            rectangle.setWidth(40);
+            rectangle.setHeight(40);
+
+            if (!isOverlapping(rectangle)) {
+                character.setX(x);
+                character.setY(y);
             }
 
-            character.setX(x);
-            character.setY(y);
 
-            camera.update();
-            tiledMapRenderer.setView(camera);
-            tiledMapRenderer.render();
+
+        camera.update();
+        tiledMapRenderer.setView(camera);
+        tiledMapRenderer.render();
 
 
             //sprite = new Sprite(currentFrame);
@@ -170,9 +177,18 @@ public class TiledTest2 extends ApplicationAdapter {
             // batch.draw(sprite,x,y);
             // batch.end();
 
-        }
+
     }
 
+    private void flipX() {
+        for (TextureRegion region : regions)
+            region.flip(true, false);
+    }
+
+    private void flipY() {
+        for (TextureRegion region : regions)
+            region.flip(false, true);
+    }
 
 
     //@Override
