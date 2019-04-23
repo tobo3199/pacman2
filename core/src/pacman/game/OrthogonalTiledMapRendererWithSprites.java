@@ -15,6 +15,7 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
     private Sprite sprite;
     private List<Sprite> sprites;
     private int drawSpritesAfterLayer = 1;
+    private float rotation = 0;
 
     public OrthogonalTiledMapRendererWithSprites(TiledMap map) {
         super(map);
@@ -23,6 +24,10 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
 
     public void addSprite(Sprite sprite){
         sprites.add(sprite);
+    }
+
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
     }
 
     @Override
@@ -53,7 +58,9 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
         if(object instanceof TextureMapObject) {
             TextureMapObject textureObj = (TextureMapObject) object;
             Sprite sprite = new Sprite(textureObj.getTextureRegion());
-            sprite.rotate(90);
+            if (rotation > 0 || rotation < 0) {
+                sprite.rotate(rotation);
+            }
             sprite.setPosition(textureObj.getX(), textureObj.getY());
             sprite.draw(batch);
         }

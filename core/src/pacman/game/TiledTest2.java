@@ -3,36 +3,26 @@ package pacman.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-
-//import java.util.Objects;
 
 
 public class TiledTest2 extends ApplicationAdapter {
     Texture img;
     TiledMap tiledMap;
     OrthographicCamera camera;
-    TiledMapRenderer tiledMapRenderer;
-    SpriteBatch sb;
+    OrthogonalTiledMapRendererWithSprites tiledMapRenderer;
+    SpriteBatch batch;
     Texture texture;
     private Sprite sprite;
     MapLayer objectLayer;
@@ -46,7 +36,8 @@ public class TiledTest2 extends ApplicationAdapter {
     private Animation<TextureRegion> animation;
     int x = 0;
     int y = 0;
-    private SpriteBatch batch;
+    float r = 0;
+
 
     @Override
     public void create() {
@@ -73,9 +64,8 @@ public class TiledTest2 extends ApplicationAdapter {
 
         TextureMapObject tmo = new TextureMapObject(regions[0]);
         tmo.setX(200);
-        tmo.setY(470);
+        tmo.setY(200);
         objectLayer.getObjects().add(tmo);
-
 
     }
 
@@ -102,7 +92,7 @@ public class TiledTest2 extends ApplicationAdapter {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        TextureMapObject character = (TextureMapObject)tiledMap.getLayers().get("objects").getObjects().get(0);
+        TextureMapObject character = (TextureMapObject) tiledMap.getLayers().get("objects").getObjects().get(0);
         float x = character.getX();
         float y = character.getY();
 
@@ -110,34 +100,26 @@ public class TiledTest2 extends ApplicationAdapter {
         TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
         character.setTextureRegion(currentFrame);
 
-        character.setRotation(270);
-        character.setOriginX(32);
-        character.setOriginY(32);
-
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            r = 180;
             if (x <= 0) {
                 x = x;
             } else {
                 x -= 10;
-
-                if (!currentFrame.isFlipX()) {
-                    flipX();
-                }
             }
-
         }
+
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            r = 0;
             if (x > 1700) {
                 x = x;
             } else {
                 x += 10;
-
-                if (currentFrame.isFlipX()) {
-                    flipX();
-                }
             }
         }
+
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            r = 90;
             if (y > 1400) {
                 y = y;
             } else {
@@ -146,6 +128,7 @@ public class TiledTest2 extends ApplicationAdapter {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            r = 270;
             if (y < 0) {
                 y = y;
             } else {
@@ -153,105 +136,66 @@ public class TiledTest2 extends ApplicationAdapter {
             }
         }
 
-            Rectangle rectangle = new Rectangle();
-            rectangle.setX(x+10);
-            rectangle.setY(y+10);
-            rectangle.setWidth(40);
-            rectangle.setHeight(40);
+        Rectangle rectangle = new Rectangle();
+        rectangle.setX(x + 10);
+        rectangle.setY(y + 10);
+        rectangle.setWidth(40);
+        rectangle.setHeight(40);
 
-            if (!isOverlapping(rectangle)) {
-                character.setX(x);
-                character.setY(y);
-            }
+        if (!isOverlapping(rectangle)) {
+            character.setX(x);
+            character.setY(y);
+        }
 
-
+        //update rotation
+        tiledMapRenderer.setRotation(r);
 
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-
-
-            //sprite = new Sprite(currentFrame);
-
-            // batch.begin();
-            // batch.draw(sprite,x,y);
-            // batch.end();
-
-
-    }
-
-    private void flipX() {
-        for (TextureRegion region : regions)
-            region.flip(true, false);
-    }
-
-    private void flipY() {
-        for (TextureRegion region : regions)
-            region.flip(false, true);
     }
 
 
-    //@Override
-    public boolean keyUp(int keycode) {
-        System.out.println(keycode);
-        //TextureMapObject character = (TextureMapObject)tiledMap.getLayers().get("objects").getObjects().get(0);
-        //character.getRectangle().set(position.x, position.y, 10, 10);
-        //character.setX(x);
-        //character.setY(y);
-        //if(keycode == Input.Keys.LEFT)
-        //texture.translate(-32,0);
-        //if(keycode == Input.Keys.RIGHT)
-        //camera.translate(32,0);
-        //if(keycode == Input.Keys.UP)
-        //camera.translate(0,-32);
-        //if(keycode == Input.Keys.DOWN)
-        //camera.translate(0,32);
-        //if(keycode == Input.Keys.NUM_1)
-        //tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
-        //if(keycode == Input.Keys.NUM_2)
-        //tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
+
+
+        //@Override
+    public boolean keyUp ( int keycode){
         return false;
     }
 
     //@Override
-    public boolean keyTyped(char keycode){
+    public boolean keyTyped ( char keycode){
         System.out.println(keycode);
         return false;
     }
 
     //@Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 clickCoordinates = new Vector3(screenX,screenY,0);
-        Vector3 position = camera.unproject(clickCoordinates);
-        TextureMapObject character = (TextureMapObject)tiledMap.getLayers().get("objects").getObjects().get(0);
-        //character.getRectangle().set(position.x, position.y, 10, 10);
-        character.setX((float)position.x);
-        character.setY((float)position.y);
+    public boolean touchDown ( int screenX, int screenY, int pointer, int button){
         return true;
     }
 
     //@Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
+    public boolean touchUp ( int screenX, int screenY, int pointer, int button){
+            return false;
+        }
 
     //@Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
+    public boolean touchDragged ( int screenX, int screenY, int pointer){
+            return false;
+        }
 
     //@Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
+    public boolean mouseMoved ( int screenX, int screenY){
+            return false;
+        }
 
     //@Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
-
+    public boolean scrolled ( int amount){
+            return false;
+        }
 
 
 }
+
 
 
