@@ -16,28 +16,28 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 
-
 public class TiledTest2 extends ApplicationAdapter {
-    Texture img;
-    TiledMap tiledMap;
-    OrthographicCamera camera;
-    OrthogonalTiledMapRendererWithSprites tiledMapRenderer;
-    SpriteBatch batch;
-    Texture texture;
+    private Texture img;
+    private TiledMap tiledMap;
+    private OrthographicCamera camera;
+    private OrthogonalTiledMapRendererWithSprites tiledMapRenderer;
+    private SpriteBatch batch;
+    private Texture texture;
     private Sprite sprite;
-    MapLayer objectLayer;
-    MapLayer wallLayer;
+    private MapLayer objectLayer;
+    private MapLayer wallLayer;
     private Rectangle rectanglepacmanY;
     private Rectangle wall;
+    //private TextureRegion geist;
+    private Texture geist;
 
     //Animation<TextureRegion> animation;
-    TextureRegion[] regions = new TextureRegion[4];
+    private TextureRegion[] regions = new TextureRegion[4];
     private float stateTime;
     private Animation<TextureRegion> animation;
-    int x = 0;
-    int y = 0;
-    float r = 0;
-
+    private int x = 0;
+    private int y = 0;
+    private float r = 0;
 
     @Override
     public void create() {
@@ -53,7 +53,10 @@ public class TiledTest2 extends ApplicationAdapter {
 
         objectLayer = tiledMap.getLayers().get("objects");
         wallLayer = tiledMap.getLayers().get("wall");
+        MapLayer layer = tiledMap.getLayers().get("Kachelebene 3");
         texture = new Texture(Gdx.files.internal("pacmanY.png"));
+        geist = new Texture(Gdx.files.internal("GeistA.png"));
+        geisterLayer = tiledMap.getLayers().get("geister");
 
         regions[0] = new TextureRegion(texture, 0, 0, 64, 64);        // #3
         regions[1] = new TextureRegion(texture, 64, 0, 64, 64);    // #4
@@ -63,10 +66,12 @@ public class TiledTest2 extends ApplicationAdapter {
         animation = new Animation<TextureRegion>(0.2f, regions);
 
         TextureMapObject tmo = new TextureMapObject(regions[0]);
-        tmo.setX(200);
-        tmo.setY(200);
+        tmo.setX(30);
+        tmo.setY(470);
         objectLayer.getObjects().add(tmo);
 
+        TextureMapObject g = new TextureMapObject(geist);
+        geisterLayer.getObjects().add(geist);
     }
 
     private boolean isOverlapping(Rectangle rectangle) {
@@ -82,7 +87,6 @@ public class TiledTest2 extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        //batch.dispose();
         texture.dispose();
     }
 
@@ -154,47 +158,6 @@ public class TiledTest2 extends ApplicationAdapter {
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
     }
-
-
-
-
-        //@Override
-    public boolean keyUp ( int keycode){
-        return false;
-    }
-
-    //@Override
-    public boolean keyTyped ( char keycode){
-        System.out.println(keycode);
-        return false;
-    }
-
-    //@Override
-    public boolean touchDown ( int screenX, int screenY, int pointer, int button){
-        return true;
-    }
-
-    //@Override
-    public boolean touchUp ( int screenX, int screenY, int pointer, int button){
-            return false;
-        }
-
-    //@Override
-    public boolean touchDragged ( int screenX, int screenY, int pointer){
-            return false;
-        }
-
-    //@Override
-    public boolean mouseMoved ( int screenX, int screenY){
-            return false;
-        }
-
-    //@Override
-    public boolean scrolled ( int amount){
-            return false;
-        }
-
-
 }
 
 

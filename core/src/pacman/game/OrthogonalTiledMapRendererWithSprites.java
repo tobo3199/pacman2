@@ -36,14 +36,18 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
         int currentLayer = 0;
         for (MapLayer layer : map.getLayers()) {
             if (layer.isVisible()) {
+
                 if (layer instanceof TiledMapTileLayer) {
+                    System.out.println("Layer" + layer.getName());
                     renderTileLayer((TiledMapTileLayer)layer);
                     currentLayer++;
                     if(currentLayer == drawSpritesAfterLayer){
+                        System.out.println("Sprite" + layer.getName());
                         for(Sprite sprite : sprites)
                             sprite.draw(this.getBatch());
                     }
                 } else {
+                    System.out.println("Object" + layer.getName());
                     for (MapObject object : layer.getObjects()) {
                         renderObject(object);
                     }
@@ -65,6 +69,4 @@ public class OrthogonalTiledMapRendererWithSprites extends OrthogonalTiledMapRen
             sprite.draw(batch);
         }
     }
-
-
 }
