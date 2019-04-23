@@ -30,6 +30,8 @@ public class TiledTest2 extends ApplicationAdapter {
     private Rectangle wall;
     //private TextureRegion geist;
     private Texture geist;
+    private TextureRegion[] ghost = new TextureRegion[1];
+    private MapLayer geisterLayer;
 
     //Animation<TextureRegion> animation;
     private TextureRegion[] regions = new TextureRegion[4];
@@ -55,7 +57,7 @@ public class TiledTest2 extends ApplicationAdapter {
         wallLayer = tiledMap.getLayers().get("wall");
         MapLayer layer = tiledMap.getLayers().get("Kachelebene 3");
         texture = new Texture(Gdx.files.internal("pacmanY.png"));
-        geist = new Texture(Gdx.files.internal("GeistA.png"));
+        geist = new Texture(Gdx.files.internal("GeistC.png"));
         geisterLayer = tiledMap.getLayers().get("geister");
 
         regions[0] = new TextureRegion(texture, 0, 0, 64, 64);        // #3
@@ -70,8 +72,12 @@ public class TiledTest2 extends ApplicationAdapter {
         tmo.setY(470);
         objectLayer.getObjects().add(tmo);
 
-        TextureMapObject g = new TextureMapObject(geist);
-        geisterLayer.getObjects().add(geist);
+        ghost[0] = new TextureRegion(geist,0,0,64,64);
+
+        TextureMapObject g = new TextureMapObject(ghost[0]);
+        g.setX(100);
+        g.setY(100);
+        geisterLayer.getObjects().add(g);
     }
 
     private boolean isOverlapping(Rectangle rectangle) {

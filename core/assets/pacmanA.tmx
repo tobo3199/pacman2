@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="56" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="84">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="56" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="84">
  <tileset firstgid="1" name="bausteine" tilewidth="32" tileheight="32" tilecount="30" columns="10">
   <image source="bausteine.png" width="320" height="96"/>
   <terraintypes>
@@ -172,6 +172,7 @@
 </data>
  </layer>
  <objectgroup id="5" name="objects"/>
+ <objectgroup id="10" name="geister"/>
  <objectgroup id="6" name="wall">
   <object id="8" x="0" y="512" width="32" height="640"/>
   <object id="9" x="32" y="1120" width="1760" height="32"/>
