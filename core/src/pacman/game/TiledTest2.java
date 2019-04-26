@@ -15,6 +15,9 @@ import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
+import com.sun.org.apache.xerces.internal.impl.dv.xs.YearDV;
+
+import java.util.Random;
 
 public class TiledTest2 extends ApplicationAdapter {
     private Texture img;
@@ -40,6 +43,9 @@ public class TiledTest2 extends ApplicationAdapter {
     private int x = 0;
     private int y = 0;
     private float r = 0;
+    private Random random;
+    private int[][] delta = {{0,-10},{0,10},{10,0}, {-10,0}};
+    private int[] deltaGhosts;
 
     @Override
     public void create() {
@@ -75,9 +81,12 @@ public class TiledTest2 extends ApplicationAdapter {
         ghost[0] = new TextureRegion(geist,0,0,64,64);
 
         TextureMapObject g = new TextureMapObject(ghost[0]);
-        g.setX(30);
+        g.setX(400);
         g.setY(670);
         geisterLayer.getObjects().add(g);
+
+        random = new Random();
+        deltaGhosts = getDirection();
     }
 
     private boolean isOverlapping(Rectangle rectangle) {
@@ -179,11 +188,30 @@ public class TiledTest2 extends ApplicationAdapter {
         float x = character.getX();
         float y = character.getY();
 
-        x = x;
-        x += 10;
+        int[] delta = getDirection();
 
-        character.setX(x);
-        character.setY(y);
+        y = y;
+        y += deltaGhosts[0];
+
+        x = x;
+        x += deltaGhosts[1];
+
+        Rectangle rectangle = new Rectangle();
+        rectangle.setX(x);
+        rectangle.setY(y);
+        rectangle.setWidth(40);
+        rectangle.setHeight(40);
+
+        if (!isOverlapping(rectangle)) {
+            character.setX(x);
+            character.setY(y);
+        } else {
+            deltaGhosts = getDirection();
+        }
+    }
+
+    private int[] getDirection() {
+        return delta[random.nextInt(4)];
     }
 }
 
