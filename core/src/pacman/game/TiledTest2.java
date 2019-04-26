@@ -75,8 +75,8 @@ public class TiledTest2 extends ApplicationAdapter {
         ghost[0] = new TextureRegion(geist,0,0,64,64);
 
         TextureMapObject g = new TextureMapObject(ghost[0]);
-        g.setX(100);
-        g.setY(100);
+        g.setX(30);
+        g.setY(670);
         geisterLayer.getObjects().add(g);
     }
 
@@ -102,6 +102,19 @@ public class TiledTest2 extends ApplicationAdapter {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //ghosts
+        moveGhosts();
+
+        //pacman
+        movePacman();
+
+        //render
+        camera.update();
+        tiledMapRenderer.setView(camera);
+        tiledMapRenderer.render();
+    }
+
+    private void movePacman() {
         TextureMapObject character = (TextureMapObject) tiledMap.getLayers().get("objects").getObjects().get(0);
         float x = character.getX();
         float y = character.getY();
@@ -159,10 +172,18 @@ public class TiledTest2 extends ApplicationAdapter {
 
         //update rotation
         tiledMapRenderer.setRotation(r);
+    }
 
-        camera.update();
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
+    private void moveGhosts() {
+        TextureMapObject character = (TextureMapObject) tiledMap.getLayers().get("geister").getObjects().get(0);
+        float x = character.getX();
+        float y = character.getY();
+
+        x = x;
+        x += 10;
+
+        character.setX(x);
+        character.setY(y);
     }
 }
 
