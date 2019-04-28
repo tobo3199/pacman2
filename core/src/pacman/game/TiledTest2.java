@@ -36,7 +36,7 @@ public class TiledTest2 extends ApplicationAdapter {
     private TextureRegion[] ghost = new TextureRegion[1];
     private MapLayer geisterLayer;
     // Punkte
-    private TextureRegion[] punkt = new  TextureRegion[1];
+    private TextureRegion punkt;
     private MapLayer punktobject;
 
     //Animation<TextureRegion> animation;
@@ -59,16 +59,16 @@ public class TiledTest2 extends ApplicationAdapter {
         camera.setToOrtho(false, w, h);
         camera.update();
 
-        tiledMap = new TmxMapLoader().load("pacmanA.tmx");
+        tiledMap = new TmxMapLoader().load("pacmanB.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(tiledMap);
 
         objectLayer = tiledMap.getLayers().get("objects");
         wallLayer = tiledMap.getLayers().get("wall");
-        MapLayer layer = tiledMap.getLayers().get("Kachelebene 3");
+        MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanY.png"));
         geist = new Texture(Gdx.files.internal("GeistC.png"));
         geisterLayer = tiledMap.getLayers().get("geister");
-        dot = new Texture(Gdx.files.internal("dot.png"));
+        dot = new Texture(Gdx.files.internal("dotA.png"));
         punktobject = tiledMap.getLayers().get("punkte");
 
 
@@ -96,9 +96,9 @@ public class TiledTest2 extends ApplicationAdapter {
         deltaGhosts = getDirection();
 
         // Punkte
-        punkt[0] = new TextureRegion(dot,0,0,64,64);
+        punkt = new TextureRegion(dot,0,0,64,64);
 
-        TextureMapObject d = new TextureMapObject(punkt[0]);
+        TextureMapObject d = new TextureMapObject(punkt);
         d.setX(100);
         d.setY(100);
         punktobject.getObjects().add(d);
