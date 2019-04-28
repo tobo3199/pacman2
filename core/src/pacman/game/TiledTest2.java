@@ -65,18 +65,18 @@ public class TiledTest2 extends ApplicationAdapter {
         objectLayer = tiledMap.getLayers().get("objects");
         wallLayer = tiledMap.getLayers().get("wall");
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
-        texture = new Texture(Gdx.files.internal("pacmanY.png"));
-        geist = new Texture(Gdx.files.internal("GeistC.png"));
+        texture = new Texture(Gdx.files.internal("pacmanZ.png"));
+        geist = new Texture(Gdx.files.internal("GeistY.png"));
         geisterLayer = tiledMap.getLayers().get("geister");
         dot = new Texture(Gdx.files.internal("dotA.png"));
         punktobject = tiledMap.getLayers().get("punkte");
 
 
 
-        regions[0] = new TextureRegion(texture, 0, 0, 64, 64);        // #3
-        regions[1] = new TextureRegion(texture, 64, 0, 64, 64);    // #4
-        regions[2] = new TextureRegion(texture, 128, 0, 64, 64);        // #5
-        regions[3] = new TextureRegion(texture, 192, 0, 64, 64);        // #5
+        regions[0] = new TextureRegion(texture, 0, 0, 32, 32);        // #3
+        regions[1] = new TextureRegion(texture, 32, 0, 32, 32);    // #4
+        regions[2] = new TextureRegion(texture, 63, 0, 32, 32);        // #5
+        regions[3] = new TextureRegion(texture, 96, 0, 32, 32);        // #5
 
         animation = new Animation<TextureRegion>(0.2f, regions);
 
@@ -85,10 +85,10 @@ public class TiledTest2 extends ApplicationAdapter {
         tmo.setY(470);
         objectLayer.getObjects().add(tmo);
 
-        ghost[0] = new TextureRegion(geist,0,0,64,64);
+        ghost[0] = new TextureRegion(geist,0,0,32,32);
 
         TextureMapObject g = new TextureMapObject(ghost[0]);
-        g.setX(400);
+        g.setX(40);
         g.setY(670);
         geisterLayer.getObjects().add(g);
 
@@ -158,7 +158,7 @@ public class TiledTest2 extends ApplicationAdapter {
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             r = 0;
-            if (x > 1700) {
+            if (x > 1800) {
                 x = x;
             } else {
                 x += 10;
@@ -186,8 +186,8 @@ public class TiledTest2 extends ApplicationAdapter {
         Rectangle rectangle = new Rectangle();
         rectangle.setX(x + 10);
         rectangle.setY(y + 10);
-        rectangle.setWidth(40);
-        rectangle.setHeight(40);
+        rectangle.setWidth(20);
+        rectangle.setHeight(20);
 
         if (!isOverlapping(rectangle)) {
             character.setX(x);
@@ -214,8 +214,8 @@ public class TiledTest2 extends ApplicationAdapter {
         Rectangle rectangle = new Rectangle();
         rectangle.setX(x);
         rectangle.setY(y);
-        rectangle.setWidth(40);
-        rectangle.setHeight(40);
+        rectangle.setWidth(20);
+        rectangle.setHeight(20);
 
         if (!isOverlapping(rectangle)) {
             character.setX(x);
