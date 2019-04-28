@@ -15,7 +15,6 @@ import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
-import com.sun.org.apache.xerces.internal.impl.dv.xs.YearDV;
 
 import java.util.Random;
 
@@ -26,6 +25,7 @@ public class TiledTest2 extends ApplicationAdapter {
     private OrthogonalTiledMapRendererWithSprites tiledMapRenderer;
     private SpriteBatch batch;
     private Texture texture;
+    private Texture dot;
     private Sprite sprite;
     private MapLayer objectLayer;
     private MapLayer wallLayer;
@@ -35,6 +35,9 @@ public class TiledTest2 extends ApplicationAdapter {
     private Texture geist;
     private TextureRegion[] ghost = new TextureRegion[1];
     private MapLayer geisterLayer;
+    // Punkte
+    private TextureRegion[] punkt = new  TextureRegion[1];
+    private MapLayer punktobject;
 
     //Animation<TextureRegion> animation;
     private TextureRegion[] regions = new TextureRegion[4];
@@ -65,6 +68,10 @@ public class TiledTest2 extends ApplicationAdapter {
         texture = new Texture(Gdx.files.internal("pacmanY.png"));
         geist = new Texture(Gdx.files.internal("GeistC.png"));
         geisterLayer = tiledMap.getLayers().get("geister");
+        dot = new Texture(Gdx.files.internal("dot.png"));
+        punktobject = tiledMap.getLayers().get("punkte");
+
+
 
         regions[0] = new TextureRegion(texture, 0, 0, 64, 64);        // #3
         regions[1] = new TextureRegion(texture, 64, 0, 64, 64);    // #4
@@ -87,6 +94,14 @@ public class TiledTest2 extends ApplicationAdapter {
 
         random = new Random();
         deltaGhosts = getDirection();
+
+        // Punkte
+        punkt[0] = new TextureRegion(dot,0,0,64,64);
+
+        TextureMapObject d = new TextureMapObject(punkt[0]);
+        d.setX(100);
+        d.setY(100);
+        punktobject.getObjects().add(d);
     }
 
     private boolean isOverlapping(Rectangle rectangle) {
