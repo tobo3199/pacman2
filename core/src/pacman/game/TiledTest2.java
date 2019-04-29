@@ -36,7 +36,7 @@ public class TiledTest2 extends ApplicationAdapter {
     private TextureRegion[] ghost = new TextureRegion[1];
     private MapLayer geisterLayer;
     // Punkte
-    private TextureRegion punkt;
+    private TextureRegion[] punkt = new TextureRegion[2];
     private MapLayer punktobject;
 
     //Animation<TextureRegion> animation;
@@ -96,12 +96,19 @@ public class TiledTest2 extends ApplicationAdapter {
         deltaGhosts = getDirection();
 
         // Punkte
-        punkt = new TextureRegion(dot,0,0,64,64);
+        punkt[0] = new TextureRegion(dot,0,0,64,64);
 
-        TextureMapObject d = new TextureMapObject(punkt);
-        d.setX(100);
-        d.setY(100);
+        TextureMapObject d = new TextureMapObject(punkt[0]);
+        d.setX(18);
+        d.setY(460);
         punktobject.getObjects().add(d);
+
+        punkt[1] = new TextureRegion(dot,0,0,64,64);
+
+        TextureMapObject f = new TextureMapObject(punkt[1]);
+        f.setX(200);
+        f.setY(460);
+        punktobject.getObjects().add(f);
     }
 
     private boolean isOverlapping(Rectangle rectangle) {
