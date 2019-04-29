@@ -37,7 +37,7 @@ public class TiledTest2 extends ApplicationAdapter {
     private MapLayer geisterLayer;
     // Punkte
     private TextureRegion[] punkt = new TextureRegion[4];
-    private MapLayer punktobject;
+    private MapLayer punkteLayer;
 
     //Animation<TextureRegion> animation;
     private TextureRegion[] regions = new TextureRegion[4];
@@ -47,7 +47,8 @@ public class TiledTest2 extends ApplicationAdapter {
     private int y = 0;
     private float r = 0;
     private Random random;
-    private int[][] delta = {{0,-10},{0,10},{10,0}, {-10,0}};
+    private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
+    private int[][] punkteKoordinaten = {{18, 460}, {460, 720}, {1710, 820}, {920, 685}, {560, 600}};
     private int[] deltaGhosts;
 
     @Override
@@ -64,25 +65,25 @@ public class TiledTest2 extends ApplicationAdapter {
 
         objectLayer = tiledMap.getLayers().get("objects");
         wallLayer = tiledMap.getLayers().get("wall");
+        punkteLayer = tiledMap.getLayers().get("punkte");
+
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanZ.png"));
         geist = new Texture(Gdx.files.internal("GeistY.png"));
         geisterLayer = tiledMap.getLayers().get("geister");
         dot = new Texture(Gdx.files.internal("dotA.png"));
-        punktobject = tiledMap.getLayers().get("punkte");
 
 
-
-        regions[0] = new TextureRegion(texture, 0, 0, 32, 32);        // #3
+        regions[0] = new TextureRegion(texture, 0, 0, 32, 32);     // #3
         regions[1] = new TextureRegion(texture, 32, 0, 32, 32);    // #4
-        regions[2] = new TextureRegion(texture, 63, 0, 32, 32);        // #5
-        regions[3] = new TextureRegion(texture, 96, 0, 32, 32);        // #5
+        regions[2] = new TextureRegion(texture, 63, 0, 32, 32);    // #5
+        regions[3] = new TextureRegion(texture, 96, 0, 32, 32);    // #5
 
         animation = new Animation<TextureRegion>(0.2f, regions);
 
         TextureMapObject tmo = new TextureMapObject(regions[0]);
-        tmo.setX(30);
-        tmo.setY(470);
+        tmo.setX(32);
+        tmo.setY(480);
         objectLayer.getObjects().add(tmo);
 
         ghost[0] = new TextureRegion(geist,0,0,32,32);
@@ -96,37 +97,17 @@ public class TiledTest2 extends ApplicationAdapter {
         deltaGhosts = getDirection();
 
         // Punkte
-        punkt[0] = new TextureRegion(dot,0,0,64,64);
-
-        TextureMapObject d = new TextureMapObject(punkt[0]);
-        d.setX(18);
-        d.setY(460);
-        punktobject.getObjects().add(d);
-
-        punkt[1] = new TextureRegion(dot,0,0,64,64);
-
-        TextureMapObject f = new TextureMapObject(punkt[1]);
-        f.setX(460);
-        f.setY(720);
-        punktobject.getObjects().add(f);
-
-        punkt[2] = new TextureRegion(dot,0,0,64,64);
-
-        TextureMapObject j = new TextureMapObject(punkt[2]);
-        j.setX(1710);
-        j.setY(820);
-        punktobject.getObjects().add(j);
-
-        punkt[3] = new TextureRegion(dot,0,0,64,64);
-
-        TextureMapObject k = new TextureMapObject(punkt[3]);
-        k.setX(920);
-        k.setY(685);
-        punktobject.getObjects().add(k);
+        TextureRegion punkt = new TextureRegion(dot,0,0,64,64);
+        for (int[] xy : punkteKoordinaten) {
+            TextureMapObject d = new TextureMapObject(punkt);
+            d.setX(xy[0]);
+            d.setY(xy[1]);
+            punkteLayer.getObjects().add(d);
+        }
     }
 
-    private boolean isOverlapping(Rectangle rectangle) {
-        MapObjects retangles = wallLayer.getObjects();
+    private boolean isOverlapping(Rectangle rectangle, MapLayer layer) {
+        MapObjects retangles = layer.getObjects();
 
         for (MapObject retangle : retangles) {
             if (((RectangleMapObject) retangle).getRectangle().overlaps(rectangle)) {
@@ -134,6 +115,21 @@ public class TiledTest2 extends ApplicationAdapter {
             }
         }
         return false;
+    }
+
+    private void removeIfOverlapping(Rectangle pacmanRectangle, MapLayer layer) {
+        MapObjects mapObjects = layer.getObjects();
+
+        for (MapObject mapObject : mapObjects) {
+            if(toRectangleObject(mapObject).overlaps(pacmanRectangle)) {
+                mapObjects.remove(mapObject);
+            }
+        }
+    }
+
+    private Rectangle toRectangleObject(MapObject mapObject) {
+        TextureMapObject d = (TextureMapObject)mapObject;
+        return new Rectangle(d.getX(), d.getY(), 32, 32);
     }
 
     @Override
@@ -173,7 +169,7 @@ public class TiledTest2 extends ApplicationAdapter {
             if (x <= 0) {
                 x = x;
             } else {
-                x -= 10;
+                x -= 8;
             }
         }
 
@@ -182,7 +178,7 @@ public class TiledTest2 extends ApplicationAdapter {
             if (x > 1800) {
                 x = x;
             } else {
-                x += 10;
+                x += 8;
             }
         }
 
@@ -191,7 +187,7 @@ public class TiledTest2 extends ApplicationAdapter {
             if (y > 1400) {
                 y = y;
             } else {
-                y += 10;
+                y += 8;
             }
         }
 
@@ -200,19 +196,21 @@ public class TiledTest2 extends ApplicationAdapter {
             if (y < 0) {
                 y = y;
             } else {
-                y -= 10;
+                y -= 8;
             }
         }
 
         Rectangle rectangle = new Rectangle();
-        rectangle.setX(x + 10);
-        rectangle.setY(y + 10);
+        rectangle.setX(x + 8);
+        rectangle.setY(y + 8);
         rectangle.setWidth(20);
         rectangle.setHeight(20);
 
-        if (!isOverlapping(rectangle)) {
+        if (!isOverlapping(rectangle, wallLayer)) {
             character.setX(x);
             character.setY(y);
+
+            removeIfOverlapping(rectangle, punkteLayer);
         }
 
         //update rotation
@@ -238,7 +236,7 @@ public class TiledTest2 extends ApplicationAdapter {
         rectangle.setWidth(20);
         rectangle.setHeight(20);
 
-        if (!isOverlapping(rectangle)) {
+        if (!isOverlapping(rectangle, wallLayer)) {
             character.setX(x);
             character.setY(y);
         } else {
