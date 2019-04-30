@@ -38,6 +38,7 @@ public class TiledTest2 extends ApplicationAdapter {
     // Punkte
     private TextureRegion[] punkt = new TextureRegion[4];
     private MapLayer punkteLayer;
+    private MapLayer kreuzungLayer;
 
     //Animation<TextureRegion> animation;
     private TextureRegion[] regions = new TextureRegion[4];
@@ -66,6 +67,7 @@ public class TiledTest2 extends ApplicationAdapter {
         objectLayer = tiledMap.getLayers().get("objects");
         wallLayer = tiledMap.getLayers().get("wall");
         punkteLayer = tiledMap.getLayers().get("punkte");
+        kreuzungLayer = tiledMap.getLayers().get("kreuzung");
 
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanZ.png"));
@@ -90,7 +92,7 @@ public class TiledTest2 extends ApplicationAdapter {
 
         TextureMapObject g = new TextureMapObject(ghost[0]);
         g.setX(40);
-        g.setY(670);
+        g.setY(770);
         geisterLayer.getObjects().add(g);
 
         random = new Random();
@@ -242,7 +244,13 @@ public class TiledTest2 extends ApplicationAdapter {
         } else {
             deltaGhosts = getDirection();
         }
+
+        if (isOverlapping(rectangle, kreuzungLayer)){
+            deltaGhosts = getDirection();
+        }
+
     }
+
 
     private int[] getDirection() {
         return delta[random.nextInt(4)];
