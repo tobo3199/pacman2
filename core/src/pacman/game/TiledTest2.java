@@ -49,7 +49,7 @@ public class TiledTest2 extends ApplicationAdapter {
     private float r = 0;
     private Random random;
     private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
-    private int[][] punkteKoordinaten = {{18, 460}, {460, 720}, {1710, 820}, {920, 685}, {560, 600}};
+    private int[][] punkteKoordinaten = {{18, 460}, {460, 720}, {1710, 820}, {920, 685}, {592, 600}};
     private int[] deltaGhosts;
 
     @Override
@@ -68,6 +68,16 @@ public class TiledTest2 extends ApplicationAdapter {
         wallLayer = tiledMap.getLayers().get("wall");
         punkteLayer = tiledMap.getLayers().get("punkte");
         kreuzungLayer = tiledMap.getLayers().get("kreuzung");
+
+        MapObjects objects = kreuzungLayer.getObjects();
+        for (MapObject object : objects) {
+            RectangleMapObject retangleObject = (RectangleMapObject)object;
+            System.out.println("X:" + ((RectangleMapObject) object).getRectangle().getX());
+            System.out.println("Y:" + ((RectangleMapObject) object).getRectangle().getY());
+            System.out.println("width:" + ((RectangleMapObject) object).getRectangle().getWidth());
+            System.out.println("height:" + ((RectangleMapObject) object).getRectangle().getHeight());
+        }
+        System.out.println("");
 
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanZ.png"));
@@ -92,7 +102,7 @@ public class TiledTest2 extends ApplicationAdapter {
 
         TextureMapObject g = new TextureMapObject(ghost[0]);
         g.setX(40);
-        g.setY(770);
+        g.setY(776);
         geisterLayer.getObjects().add(g);
 
         random = new Random();
@@ -116,6 +126,27 @@ public class TiledTest2 extends ApplicationAdapter {
                 return true;
             }
         }
+        return false;
+    }
+
+    private boolean isKreuzung(float x, float y, MapLayer layer) {
+        MapObjects mapObjects = layer.getObjects();
+        System.out.println(">isOverlapping");
+        System.out.println(x + "/" + y);
+        for (MapObject mapObject : mapObjects) {
+            RectangleMapObject rectangleObject = (RectangleMapObject)mapObject;
+            System.out.println(rectangleObject.getRectangle().getX() + "/" + rectangleObject.getRectangle().getY());
+            float diffX = x - rectangleObject.getRectangle().getX();
+            if (diffX < 0) diffX = diffX * -1;
+
+            float diffY = y - rectangleObject.getRectangle().getY();
+            if (diffY < 0) diffY = diffY * -1;
+
+            System.out.println(diffX + "/" + diffY);
+            System.out.println("");
+            if ((diffX == 0) && (diffY == 0)) return true;
+        }
+        System.out.println("<isOverlapping");
         return false;
     }
 
@@ -212,7 +243,13 @@ public class TiledTest2 extends ApplicationAdapter {
             character.setX(x);
             character.setY(y);
 
+            removeIfOverlapping(rectangle, geisterLayer);
             removeIfOverlapping(rectangle, punkteLayer);
+
+            /*System.out.println("pacman");
+            System.out.println(x);
+            System.out.println(y);
+            System.out.println("");*/
         }
 
         //update rotation
@@ -220,37 +257,44 @@ public class TiledTest2 extends ApplicationAdapter {
     }
 
     private void moveGhosts() {
-        TextureMapObject character = (TextureMapObject) tiledMap.getLayers().get("geister").getObjects().get(0);
-        float x = character.getX();
-        float y = character.getY();
+        MapObjects objects = tiledMap.getLayers().get("geister").getObjects();
+        if (objects.getCount() > 0) {
+            TextureMapObject character = (TextureMapObject) objects.get(0);
+            float x = character.getX();
+            float y = character.getY();
 
-        int[] delta = getDirection();
 
-        y = y;
-        y += deltaGhosts[0];
+            int[] delta = getDirection();
 
-        x = x;
-        x += deltaGhosts[1];
+            y = y;
+            y += deltaGhosts[0];
 
-        Rectangle rectangle = new Rectangle();
-        rectangle.setX(x);
-        rectangle.setY(y);
-        rectangle.setWidth(20);
-        rectangle.setHeight(20);
+            x = x;
+            x += deltaGhosts[1];
 
-        if (!isOverlapping(rectangle, wallLayer)) {
-            character.setX(x);
-            character.setY(y);
-        } else {
-            deltaGhosts = getDirection();
+            Rectangle rectangle = new Rectangle();
+            rectangle.setX(x);
+            rectangle.setY(y);
+            rectangle.setWidth(32);
+            rectangle.setHeight(32);
+
+            if (!isOverlapping(rectangle, wallLayer)) {
+                character.setX(x);
+                character.setY(y);
+
+                /*System.out.println("gosts");
+                System.out.println(x);
+                System.out.println(y);
+                System.out.println("");*/
+            } else {
+                deltaGhosts = getDirection();
+            }
+
+            if (isKreuzung(x, y, kreuzungLayer)){
+                deltaGhosts = getDirection();
+            }
         }
-
-        if (isOverlapping(rectangle, kreuzungLayer)){
-            deltaGhosts = getDirection();
-        }
-
     }
-
 
     private int[] getDirection() {
         return delta[random.nextInt(4)];
