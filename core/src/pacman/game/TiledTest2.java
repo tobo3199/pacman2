@@ -68,7 +68,7 @@ public class TiledTest2 extends ApplicationAdapter {
         wallLayer = tiledMap.getLayers().get("wall");
         punkteLayer = tiledMap.getLayers().get("punkte");
         kreuzungLayer = tiledMap.getLayers().get("kreuzung");
-
+/*
         MapObjects objects = kreuzungLayer.getObjects();
         for (MapObject object : objects) {
             RectangleMapObject retangleObject = (RectangleMapObject)object;
@@ -78,7 +78,7 @@ public class TiledTest2 extends ApplicationAdapter {
             System.out.println("height:" + ((RectangleMapObject) object).getRectangle().getHeight());
         }
         System.out.println("");
-
+*/
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanZ.png"));
         geist = new Texture(Gdx.files.internal("GeistY.png"));
@@ -131,22 +131,22 @@ public class TiledTest2 extends ApplicationAdapter {
 
     private boolean isKreuzung(float x, float y, MapLayer layer) {
         MapObjects mapObjects = layer.getObjects();
-        System.out.println(">isOverlapping");
-        System.out.println(x + "/" + y);
+       // System.out.println(">isOverlapping");
+       // System.out.println(x + "/" + y);
         for (MapObject mapObject : mapObjects) {
             RectangleMapObject rectangleObject = (RectangleMapObject)mapObject;
-            System.out.println(rectangleObject.getRectangle().getX() + "/" + rectangleObject.getRectangle().getY());
+            //System.out.println(rectangleObject.getRectangle().getX() + "/" + rectangleObject.getRectangle().getY());
             float diffX = x - rectangleObject.getRectangle().getX();
             if (diffX < 0) diffX = diffX * -1;
 
             float diffY = y - rectangleObject.getRectangle().getY();
             if (diffY < 0) diffY = diffY * -1;
 
-            System.out.println(diffX + "/" + diffY);
-            System.out.println("");
+           // System.out.println(diffX + "/" + diffY);
+           // System.out.println("hallo");
             if ((diffX == 0) && (diffY == 0)) return true;
         }
-        System.out.println("<isOverlapping");
+        //System.out.println("<isOverlapping");
         return false;
     }
 
