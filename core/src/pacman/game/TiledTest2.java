@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.Random;
 
@@ -31,6 +32,7 @@ public class TiledTest2 extends ApplicationAdapter {
     private MapLayer wallLayer;
     private Rectangle rectanglepacmanY;
     private Rectangle wall;
+    private long startTime = 0;
     //private TextureRegion geist;
     private Texture geist;
     private TextureRegion[] ghost = new TextureRegion[1];
@@ -51,6 +53,9 @@ public class TiledTest2 extends ApplicationAdapter {
     private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
     private int[][] punkteKoordinaten = {{18, 460}, {460, 720}, {1710, 820}, {920, 685}, {592, 600}};
     private int[] deltaGhosts;
+
+    public TiledTest2() {
+    }
 
     @Override
     public void create() {
@@ -150,14 +155,16 @@ public class TiledTest2 extends ApplicationAdapter {
         return false;
     }
 
-    private void removeIfOverlapping(Rectangle pacmanRectangle, MapLayer layer) {
+    private boolean removeIfOverlapping(Rectangle pacmanRectangle, MapLayer layer) {
         MapObjects mapObjects = layer.getObjects();
 
         for (MapObject mapObject : mapObjects) {
             if(toRectangleObject(mapObject).overlaps(pacmanRectangle)) {
                 mapObjects.remove(mapObject);
+                return true;
             }
         }
+        return false;
     }
 
     private Rectangle toRectangleObject(MapObject mapObject) {
@@ -244,12 +251,21 @@ public class TiledTest2 extends ApplicationAdapter {
             character.setY(y);
 
             removeIfOverlapping(rectangle, geisterLayer);
-            removeIfOverlapping(rectangle, punkteLayer);
+
+            if (removeIfOverlapping(rectangle, punkteLayer)) {
+                //starte den Timer
+                startTime = TimeUtils.millis();
+            }
 
             /*System.out.println("pacman");
             System.out.println(x);
             System.out.println(y);
             System.out.println("");*/
+        }
+
+        if(TimeUtils.timeSinceMillis(startTime) > 5000) {
+            // timer ist nach 5 Sekunden zu Ende
+            startTime = 0;
         }
 
         //update rotation
