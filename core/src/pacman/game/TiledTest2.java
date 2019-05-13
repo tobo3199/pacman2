@@ -16,7 +16,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
-
+import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
 public class TiledTest2 extends ApplicationAdapter {
@@ -30,6 +32,7 @@ public class TiledTest2 extends ApplicationAdapter {
     private Sprite sprite;
     private MapLayer objectLayer;
     private MapLayer wallLayer;
+    private MapLayer gameOverLayer;
     private Rectangle rectanglepacmanY;
     private Rectangle wall;
     private long startTime = 0;
@@ -53,6 +56,10 @@ public class TiledTest2 extends ApplicationAdapter {
     private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
     private int[][] punkteKoordinaten = {{18, 460}, {460, 720}, {1710, 820}, {920, 685}, {592, 600}};
     private int[] deltaGhosts;
+    private Label label;
+    private Texture gameOver;
+    private TextureRegion gameOverRegion;
+    private BitmapFont font;
 
     public TiledTest2() {
     }
@@ -66,6 +73,8 @@ public class TiledTest2 extends ApplicationAdapter {
         camera.setToOrtho(false, w, h);
         camera.update();
 
+        //font = new BitmapFont(Gdx.files.internal("data/rayanfont.fnt"), false);
+
         tiledMap = new TmxMapLoader().load("pacmanB.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(tiledMap);
 
@@ -73,7 +82,9 @@ public class TiledTest2 extends ApplicationAdapter {
         wallLayer = tiledMap.getLayers().get("wall");
         punkteLayer = tiledMap.getLayers().get("punkte");
         kreuzungLayer = tiledMap.getLayers().get("kreuzung");
-/*
+        gameOverLayer = tiledMap.getLayers().get("GameOver");
+        /*
+
         MapObjects objects = kreuzungLayer.getObjects();
         for (MapObject object : objects) {
             RectangleMapObject retangleObject = (RectangleMapObject)object;
@@ -89,7 +100,9 @@ public class TiledTest2 extends ApplicationAdapter {
         geist = new Texture(Gdx.files.internal("GeistY.png"));
         geisterLayer = tiledMap.getLayers().get("geister");
         dot = new Texture(Gdx.files.internal("dotA.png"));
+        gameOver = new Texture(Gdx.files.internal("GameOver.jpg"));
 
+        gameOverRegion = new TextureRegion(gameOver,250,200);
 
         regions[0] = new TextureRegion(texture, 0, 0, 32, 32);     // #3
         regions[1] = new TextureRegion(texture, 32, 0, 32, 32);    // #4
@@ -102,6 +115,11 @@ public class TiledTest2 extends ApplicationAdapter {
         tmo.setX(32);
         tmo.setY(480);
         objectLayer.getObjects().add(tmo);
+
+        TextureMapObject go = new TextureMapObject(gameOverRegion);
+        go.setX(500);
+        go.setY(500);
+        gameOverLayer.getObjects().add(go);
 
         ghost[0] = new TextureRegion(geist,0,0,32,32);
 
@@ -183,6 +201,11 @@ public class TiledTest2 extends ApplicationAdapter {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //batch.begin();
+        //font.setScale(.2f);
+        //font.draw(batch, "hello", x,y);
+        //batch.end();
+
         //ghosts
         moveGhosts();
 
@@ -250,7 +273,14 @@ public class TiledTest2 extends ApplicationAdapter {
             character.setX(x);
             character.setY(y);
 
-            removeIfOverlapping(rectangle, geisterLayer);
+            if(removeIfOverlapping(rectangle, geisterLayer)){
+                if(startTime == 0){
+                    System.out.println("game over");
+                    //Label gameOverLabel = new Label("GAME OVER");
+                    //JLabel label = new JLabel("Game Over");
+                    //TiledMap.add(label);
+                }
+            }
 
             if (removeIfOverlapping(rectangle, punkteLayer)) {
                 //starte den Timer
