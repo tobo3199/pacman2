@@ -40,6 +40,8 @@ public class TiledTest2 extends ApplicationAdapter {
     private Texture geist;
     private TextureRegion[] ghost = new TextureRegion[1];
     private MapLayer geisterLayer;
+    private Texture geist1;
+    private TextureRegion ghost1;
     // Punkte
     private TextureRegion[] punkt = new TextureRegion[4];
     private MapLayer punkteLayer;
@@ -83,20 +85,10 @@ public class TiledTest2 extends ApplicationAdapter {
         punkteLayer = tiledMap.getLayers().get("punkte");
         kreuzungLayer = tiledMap.getLayers().get("kreuzung");
         gameOverLayer = tiledMap.getLayers().get("GameOver");
-        /*
 
-        MapObjects objects = kreuzungLayer.getObjects();
-        for (MapObject object : objects) {
-            RectangleMapObject retangleObject = (RectangleMapObject)object;
-            System.out.println("X:" + ((RectangleMapObject) object).getRectangle().getX());
-            System.out.println("Y:" + ((RectangleMapObject) object).getRectangle().getY());
-            System.out.println("width:" + ((RectangleMapObject) object).getRectangle().getWidth());
-            System.out.println("height:" + ((RectangleMapObject) object).getRectangle().getHeight());
-        }
-        System.out.println("");
-*/
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanZ.png"));
+        geist1 = new Texture("GeistX.jpg");
         geist = new Texture(Gdx.files.internal("GeistY.png"));
         geisterLayer = tiledMap.getLayers().get("geister");
         dot = new Texture(Gdx.files.internal("dotA.png"));
@@ -116,18 +108,15 @@ public class TiledTest2 extends ApplicationAdapter {
         tmo.setY(480);
         objectLayer.getObjects().add(tmo);
 
-        TextureMapObject go = new TextureMapObject(gameOverRegion);
-        go.setX(500);
-        go.setY(500);
-        gameOverLayer.getObjects().add(go);
 
+/*
         ghost[0] = new TextureRegion(geist,0,0,32,32);
 
         TextureMapObject g = new TextureMapObject(ghost[0]);
         g.setX(40);
         g.setY(776);
         geisterLayer.getObjects().add(g);
-
+*/
         random = new Random();
         deltaGhosts = getDirection();
 
@@ -273,9 +262,13 @@ public class TiledTest2 extends ApplicationAdapter {
             character.setX(x);
             character.setY(y);
 
-            if(removeIfOverlapping(rectangle, geisterLayer)){
+            if(removeIfOverlapping (rectangle, geisterLayer)){
                 if(startTime == 0){
-                    System.out.println("game over");
+                    //GameOver Zeichen
+                    TextureMapObject go = new TextureMapObject(gameOverRegion);
+                    go.setX(500);
+                    go.setY(500);
+                    gameOverLayer.getObjects().add(go);
                     //Label gameOverLabel = new Label("GAME OVER");
                     //JLabel label = new JLabel("Game Over");
                     //TiledMap.add(label);
@@ -285,17 +278,28 @@ public class TiledTest2 extends ApplicationAdapter {
             if (removeIfOverlapping(rectangle, punkteLayer)) {
                 //starte den Timer
                 startTime = TimeUtils.millis();
-            }
 
-            /*System.out.println("pacman");
-            System.out.println(x);
-            System.out.println(y);
-            System.out.println("");*/
+                //geist andere farbe (blau)
+                ghost[0] = new TextureRegion(geist1,0,0,32,32);
+
+                TextureMapObject g = new TextureMapObject(ghost[0]);
+                g.setX(40);
+                g.setY(776);
+                geisterLayer.getObjects().add(g);
+            }
         }
 
         if(TimeUtils.timeSinceMillis(startTime) > 5000) {
             // timer ist nach 5 Sekunden zu Ende
             startTime = 0;
+
+            //hier die farbe ändern
+            ghost[0] = new TextureRegion(geist,0,0,32,32);
+
+            TextureMapObject g = new TextureMapObject(ghost[0]);
+            g.setX(40);
+            g.setY(776);
+            geisterLayer.getObjects().add(g);
         }
 
         //update rotation
@@ -339,6 +343,9 @@ public class TiledTest2 extends ApplicationAdapter {
             if (isKreuzung(x, y, kreuzungLayer)){
                 deltaGhosts = getDirection();
             }
+
+            //objectLayer.getObjects().remove(0);
+            //if(removeIfOverlapping (rectangle, objectLayer));
         }
     }
 
