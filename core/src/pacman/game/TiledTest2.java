@@ -56,7 +56,7 @@ public class TiledTest2 extends ApplicationAdapter {
     private float r = 0;
     private Random random;
     private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
-    private int[][] punkteKoordinaten = {{18, 460}, {460, 720}, {1710, 820}, {920, 685}, {592, 600}};
+    private int[][] punkteKoordinaten = {{64, 360}, {460, 720}, {1710, 820}, {920, 685}, {592, 600}};
     private int[] deltaGhosts;
     private Label label;
     private Texture gameOver;
@@ -88,7 +88,7 @@ public class TiledTest2 extends ApplicationAdapter {
 
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanZ.png"));
-        geist1 = new Texture("GeistX.jpg");
+        geist1 = new Texture("GeistG.png");
         geist = new Texture(Gdx.files.internal("GeistY.png"));
         geisterLayer = tiledMap.getLayers().get("geister");
         dot = new Texture(Gdx.files.internal("dotA.png"));
