@@ -16,8 +16,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
-import java.awt.Color;
-import javax.swing.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+
 import java.awt.*;
 import java.util.Random;
 
@@ -37,10 +37,10 @@ public class TiledTest2 extends ApplicationAdapter {
     private Rectangle wall;
     private long startTime = 0;
     //private TextureRegion geist;
-    private Texture geist;
     private TextureRegion[] ghost = new TextureRegion[1];
     private MapLayer geisterLayer;
-    private Texture geist1;
+    private Texture geistBlau;
+    private Texture geistRot;
     private TextureRegion ghost1;
     // Punkte
     private TextureRegion[] punkt = new TextureRegion[4];
@@ -71,6 +71,11 @@ public class TiledTest2 extends ApplicationAdapter {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
+        //BitmapFont
+        //TextButton.TextButtonStyle
+        //skin = new Skin();
+
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
         camera.update();
@@ -88,8 +93,8 @@ public class TiledTest2 extends ApplicationAdapter {
 
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanZ.png"));
-        geist1 = new Texture("GeistG.png");
-        geist = new Texture(Gdx.files.internal("GeistY.png"));
+        geistBlau = new Texture("GeistG.png");
+        geistRot = new Texture(Gdx.files.internal("GeistY.png"));
         geisterLayer = tiledMap.getLayers().get("geister");
         dot = new Texture(Gdx.files.internal("dotA.png"));
         gameOver = new Texture(Gdx.files.internal("GameOver.jpg"));
@@ -108,15 +113,13 @@ public class TiledTest2 extends ApplicationAdapter {
         tmo.setY(480);
         objectLayer.getObjects().add(tmo);
 
-
-/*
-        ghost[0] = new TextureRegion(geist,0,0,32,32);
+        ghost[0] = new TextureRegion(geistRot,0,0,32,32);
 
         TextureMapObject g = new TextureMapObject(ghost[0]);
         g.setX(40);
         g.setY(776);
         geisterLayer.getObjects().add(g);
-*/
+
         random = new Random();
         deltaGhosts = getDirection();
 
@@ -189,11 +192,6 @@ public class TiledTest2 extends ApplicationAdapter {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        //batch.begin();
-        //font.setScale(.2f);
-        //font.draw(batch, "hello", x,y);
-        //batch.end();
 
         //ghosts
         moveGhosts();
@@ -269,9 +267,6 @@ public class TiledTest2 extends ApplicationAdapter {
                     go.setX(500);
                     go.setY(500);
                     gameOverLayer.getObjects().add(go);
-                    //Label gameOverLabel = new Label("GAME OVER");
-                    //JLabel label = new JLabel("Game Over");
-                    //TiledMap.add(label);
                 }
             }
 
@@ -279,13 +274,7 @@ public class TiledTest2 extends ApplicationAdapter {
                 //starte den Timer
                 startTime = TimeUtils.millis();
 
-                //geist andere farbe (blau)
-                ghost[0] = new TextureRegion(geist1,0,0,32,32);
-
-                TextureMapObject g = new TextureMapObject(ghost[0]);
-                g.setX(40);
-                g.setY(776);
-                geisterLayer.getObjects().add(g);
+                changeRegion(geistBlau);
             }
         }
 
@@ -293,17 +282,18 @@ public class TiledTest2 extends ApplicationAdapter {
             // timer ist nach 5 Sekunden zu Ende
             startTime = 0;
 
-            //hier die farbe ändern
-            ghost[0] = new TextureRegion(geist,0,0,32,32);
-
-            TextureMapObject g = new TextureMapObject(ghost[0]);
-            g.setX(40);
-            g.setY(776);
-            geisterLayer.getObjects().add(g);
+            changeRegion(geistRot);
         }
 
         //update rotation
         tiledMapRenderer.setRotation(r);
+    }
+
+    private void changeRegion(Texture geistBild) {
+        for (MapObject object : geisterLayer.getObjects()) {
+            TextureMapObject textureMapObject = (TextureMapObject)object;
+            textureMapObject.getTextureRegion().setRegion(geistBild);
+        }
     }
 
     private void moveGhosts() {

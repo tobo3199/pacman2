@@ -1,0 +1,11 @@
+{
+
+  "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+"MeineFont": {"file": "",}
+  },
+
+  "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+    "default": {}
+  }
+
+}
