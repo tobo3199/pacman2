@@ -3,6 +3,7 @@ package pacman.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,10 +16,19 @@ import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import java.awt.*;
 import java.util.Random;
 
 public class TiledTest2 extends ApplicationAdapter {
@@ -58,10 +68,17 @@ public class TiledTest2 extends ApplicationAdapter {
     private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
     private int[][] punkteKoordinaten = {{64, 360}, {460, 720}, {1710, 820}, {920, 685}, {592, 600}};
     private int[] deltaGhosts;
-    private Label label;
     private Texture gameOver;
     private TextureRegion gameOverRegion;
     private BitmapFont font;
+
+    //ImageButton
+    private Texture imageButtonTexture;
+    private TextureRegion imageButtonTextureRegion;
+    private TextureRegionDrawable imageButtonDrawable;
+    private ImageButton button;
+    private MapLayer imageButtonLayer;
+    private int score = 0;
 
     public TiledTest2() {
     }
@@ -71,36 +88,59 @@ public class TiledTest2 extends ApplicationAdapter {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
-        //BitmapFont
-        //TextButton.TextButtonStyle
-        //skin = new Skin();
-
-
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
         camera.update();
 
-        //font = new BitmapFont(Gdx.files.internal("data/rayanfont.fnt"), false);
+        imageButtonTexture = new Texture("StartButton.png");
+        imageButtonTextureRegion = new TextureRegion(imageButtonTexture);
+        imageButtonDrawable = new TextureRegionDrawable(imageButtonTextureRegion);
+        button = new ImageButton(imageButtonDrawable);
 
         tiledMap = new TmxMapLoader().load("pacmanB.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(tiledMap);
+        imageButtonLayer = tiledMap.getLayers().get("button");
 
         objectLayer = tiledMap.getLayers().get("objects");
         wallLayer = tiledMap.getLayers().get("wall");
         punkteLayer = tiledMap.getLayers().get("punkte");
         kreuzungLayer = tiledMap.getLayers().get("kreuzung");
         gameOverLayer = tiledMap.getLayers().get("GameOver");
+        geisterLayer = tiledMap.getLayers().get("geister");
 
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanZ.png"));
         geistBlau = new Texture("GeistG.png");
         geistRot = new Texture(Gdx.files.internal("GeistY.png"));
-        geisterLayer = tiledMap.getLayers().get("geister");
         dot = new Texture(Gdx.files.internal("dotA.png"));
         gameOver = new Texture(Gdx.files.internal("GameOver.jpg"));
 
-        gameOverRegion = new TextureRegion(gameOver,250,200);
+        //button = new ImageButton(button,250,250);
+        imageButtonTextureRegion = new TextureRegion(imageButtonTexture,800,350);
+        //imageButtonDrawable = new TextureRegionDrawable(imageButtonTexture,250,250);
 
+        /*Label.LabelStyle label1Style = new Label.LabelStyle();
+        BitmapFont myFont = new BitmapFont(Gdx.files.internal("bitmapfont/Amble-Regular-26.fnt"));
+        label1Style.font = myFont;
+        label1Style.fontColor = Color.RED;
+
+        Label label1 = new Label("Title (BitmapFont)",label1Style);
+        label1.setSize(Gdx.graphics.getWidth(),32);
+        label1.setPosition(0,Gdx.graphics.getHeight()-32*2);
+        label1.setAlignment(Align.center);
+
+        imageButtonLayer.getObjects().add(new TextureMapObject(label1));*/
+
+
+
+
+        TextureMapObject ib = new TextureMapObject(imageButtonTextureRegion);
+        ib.setX(600);
+        ib.setY(1000);
+        imageButtonLayer.getObjects().add(ib);
+
+        gameOverRegion = new TextureRegion(gameOver,250,200);
+        //Pacman
         regions[0] = new TextureRegion(texture, 0, 0, 32, 32);     // #3
         regions[1] = new TextureRegion(texture, 32, 0, 32, 32);    // #4
         regions[2] = new TextureRegion(texture, 63, 0, 32, 32);    // #5
@@ -131,6 +171,14 @@ public class TiledTest2 extends ApplicationAdapter {
             d.setY(xy[1]);
             punkteLayer.getObjects().add(d);
         }
+
+        batch = new SpriteBatch();
+        sprite = new Sprite(geistRot);
+
+        font = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
+
+
+
     }
 
     private boolean isOverlapping(Rectangle rectangle, MapLayer layer) {
@@ -193,6 +241,10 @@ public class TiledTest2 extends ApplicationAdapter {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                       System.out.println("hallo");
+        }
+
         //ghosts
         moveGhosts();
 
@@ -203,7 +255,17 @@ public class TiledTest2 extends ApplicationAdapter {
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
+
+
+        batch.begin();
+
+        //text += "1";
+        String text = "Score: " + score;
+        font.draw(batch, text, 500, 1050);
+        batch.end();
     }
+
+
 
     private void movePacman() {
         TextureMapObject character = (TextureMapObject) tiledMap.getLayers().get("objects").getObjects().get(0);
@@ -267,6 +329,8 @@ public class TiledTest2 extends ApplicationAdapter {
                     go.setX(500);
                     go.setY(500);
                     gameOverLayer.getObjects().add(go);
+                } else {
+                    score += 200;
                 }
             }
 
