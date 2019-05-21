@@ -80,6 +80,16 @@ public class TiledTest2 extends ApplicationAdapter {
     private MapLayer imageButtonLayer;
     private int score = 0;
 
+    //kleine Punkte
+    private MapLayer kleinePunkteLayer;
+    private Texture smallDot;
+    private TextureRegion smallDotRegion;
+    private MapLayer smallDotLayer;
+
+
+
+
+
     public TiledTest2() {
     }
 
@@ -107,6 +117,9 @@ public class TiledTest2 extends ApplicationAdapter {
         kreuzungLayer = tiledMap.getLayers().get("kreuzung");
         gameOverLayer = tiledMap.getLayers().get("GameOver");
         geisterLayer = tiledMap.getLayers().get("geister");
+        kleinePunkteLayer = tiledMap.getLayers().get("scorePunkte");
+        //kpLayer = tiledMap.getLayers().get("ScorePunkte");
+        smallDotLayer = tiledMap.getLayers().get("smallDot");
 
         MapLayer layer = tiledMap.getLayers().get("Tiled Punkte");
         texture = new Texture(Gdx.files.internal("pacmanZ.png"));
@@ -114,6 +127,8 @@ public class TiledTest2 extends ApplicationAdapter {
         geistRot = new Texture(Gdx.files.internal("GeistY.png"));
         dot = new Texture(Gdx.files.internal("dotA.png"));
         gameOver = new Texture(Gdx.files.internal("GameOver.jpg"));
+        smallDot = new Texture("dotB.png");
+
 
         //button = new ImageButton(button,250,250);
         imageButtonTextureRegion = new TextureRegion(imageButtonTexture,800,350);
@@ -177,8 +192,13 @@ public class TiledTest2 extends ApplicationAdapter {
 
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
 
+        smallDotRegion = new TextureRegion(smallDot,32,32);
 
-
+        /*TextureMapObject sd = new TextureMapObject(smallDotRegion);
+        sd.setX(200);
+        sd.setY(480);
+        smallDotLayer.getObjects().add(sd);
+*/
     }
 
     private boolean isOverlapping(Rectangle rectangle, MapLayer layer) {
@@ -225,6 +245,8 @@ public class TiledTest2 extends ApplicationAdapter {
         return false;
     }
 
+
+
     private Rectangle toRectangleObject(MapObject mapObject) {
         TextureMapObject d = (TextureMapObject)mapObject;
         return new Rectangle(d.getX(), d.getY(), 32, 32);
@@ -244,6 +266,22 @@ public class TiledTest2 extends ApplicationAdapter {
         if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
                        System.out.println("hallo");
         }
+
+        Rectangle rectangle = new Rectangle();
+        rectangle.setX(0);
+        rectangle.setY(0);
+        rectangle.setWidth(800);
+        rectangle.setHeight(800);
+
+        if(isOverlapping(rectangle,kleinePunkteLayer)){
+
+            TextureMapObject sd = new TextureMapObject(smallDotRegion);
+            sd.setX(400);
+            sd.setY(480);
+            smallDotLayer.getObjects().add(sd);
+        }
+
+
 
         //ghosts
         moveGhosts();
@@ -348,6 +386,16 @@ public class TiledTest2 extends ApplicationAdapter {
 
             changeRegion(geistRot);
         }
+
+        if(removeIfOverlapping(rectangle,smallDotLayer)){
+
+            score += 20;
+        }
+
+        //if(removeIfOverlapping(rectangle, kpLayer)) {
+
+        //    score += 20;
+        //}
 
         //update rotation
         tiledMapRenderer.setRotation(r);
