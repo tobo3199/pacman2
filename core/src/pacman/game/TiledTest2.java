@@ -86,10 +86,6 @@ public class TiledTest2 extends ApplicationAdapter {
     private TextureRegion smallDotRegion;
     private MapLayer smallDotLayer;
 
-
-
-
-
     public TiledTest2() {
     }
 
@@ -194,6 +190,14 @@ public class TiledTest2 extends ApplicationAdapter {
 
         smallDotRegion = new TextureRegion(smallDot,32,32);
 
+        for (MapObject object: kleinePunkteLayer.getObjects()) {
+            RectangleMapObject rmo = (RectangleMapObject)object;
+            TextureMapObject sd = new TextureMapObject(smallDotRegion);
+            sd.setX(rmo.getRectangle().getX());
+            sd.setY(rmo.getRectangle().getY());
+            smallDotLayer.getObjects().add(sd);
+        }
+
         /*TextureMapObject sd = new TextureMapObject(smallDotRegion);
         sd.setX(200);
         sd.setY(480);
@@ -245,8 +249,6 @@ public class TiledTest2 extends ApplicationAdapter {
         return false;
     }
 
-
-
     private Rectangle toRectangleObject(MapObject mapObject) {
         TextureMapObject d = (TextureMapObject)mapObject;
         return new Rectangle(d.getX(), d.getY(), 32, 32);
@@ -264,24 +266,8 @@ public class TiledTest2 extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-                       System.out.println("hallo");
+            System.out.println("hallo");
         }
-
-        Rectangle rectangle = new Rectangle();
-        rectangle.setX(0);
-        rectangle.setY(0);
-        rectangle.setWidth(800);
-        rectangle.setHeight(800);
-
-        if(isOverlapping(rectangle,kleinePunkteLayer)){
-
-            TextureMapObject sd = new TextureMapObject(smallDotRegion);
-            sd.setX(400);
-            sd.setY(480);
-            smallDotLayer.getObjects().add(sd);
-        }
-
-
 
         //ghosts
         moveGhosts();
@@ -294,7 +280,6 @@ public class TiledTest2 extends ApplicationAdapter {
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
 
-
         batch.begin();
 
         //text += "1";
@@ -302,8 +287,6 @@ public class TiledTest2 extends ApplicationAdapter {
         font.draw(batch, text, 500, 1050);
         batch.end();
     }
-
-
 
     private void movePacman() {
         TextureMapObject character = (TextureMapObject) tiledMap.getLayers().get("objects").getObjects().get(0);
@@ -350,17 +333,19 @@ public class TiledTest2 extends ApplicationAdapter {
             }
         }
 
-        Rectangle rectangle = new Rectangle();
-        rectangle.setX(x + 8);
-        rectangle.setY(y + 8);
-        rectangle.setWidth(20);
-        rectangle.setHeight(20);
 
-        if (!isOverlapping(rectangle, wallLayer)) {
+        //pacman Bewegung
+        Rectangle pacmanRectangle = new Rectangle();
+        pacmanRectangle.setX(x + 8);
+        pacmanRectangle.setY(y + 8);
+        pacmanRectangle.setWidth(20);
+        pacmanRectangle.setHeight(20);
+
+        if (!isOverlapping(pacmanRectangle, wallLayer)) {
             character.setX(x);
             character.setY(y);
 
-            if(removeIfOverlapping (rectangle, geisterLayer)){
+            if(removeIfOverlapping (pacmanRectangle, geisterLayer)){
                 if(startTime == 0){
                     //GameOver Zeichen
                     TextureMapObject go = new TextureMapObject(gameOverRegion);
@@ -372,7 +357,7 @@ public class TiledTest2 extends ApplicationAdapter {
                 }
             }
 
-            if (removeIfOverlapping(rectangle, punkteLayer)) {
+            if (removeIfOverlapping(pacmanRectangle, punkteLayer)) {
                 //starte den Timer
                 startTime = TimeUtils.millis();
 
@@ -387,15 +372,9 @@ public class TiledTest2 extends ApplicationAdapter {
             changeRegion(geistRot);
         }
 
-        if(removeIfOverlapping(rectangle,smallDotLayer)){
-
+        if(removeIfOverlapping(pacmanRectangle,smallDotLayer)){
             score += 20;
         }
-
-        //if(removeIfOverlapping(rectangle, kpLayer)) {
-
-        //    score += 20;
-        //}
 
         //update rotation
         tiledMapRenderer.setRotation(r);
@@ -415,7 +394,6 @@ public class TiledTest2 extends ApplicationAdapter {
             float x = character.getX();
             float y = character.getY();
 
-
             int[] delta = getDirection();
 
             y = y;
@@ -433,11 +411,6 @@ public class TiledTest2 extends ApplicationAdapter {
             if (!isOverlapping(rectangle, wallLayer)) {
                 character.setX(x);
                 character.setY(y);
-
-                /*System.out.println("gosts");
-                System.out.println(x);
-                System.out.println(y);
-                System.out.println("");*/
             } else {
                 deltaGhosts = getDirection();
             }
@@ -445,9 +418,6 @@ public class TiledTest2 extends ApplicationAdapter {
             if (isKreuzung(x, y, kreuzungLayer)){
                 deltaGhosts = getDirection();
             }
-
-            //objectLayer.getObjects().remove(0);
-            //if(removeIfOverlapping (rectangle, objectLayer));
         }
     }
 

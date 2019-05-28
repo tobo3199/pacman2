@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="56" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="306">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="56" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="21" nextobjectid="306">
  <tileset firstgid="1" name="bausteine" tilewidth="32" tileheight="32" tilecount="30" columns="10">
   <image source="bausteine.png" width="320" height="96"/>
   <terraintypes>
@@ -388,6 +388,7 @@
   <object id="303" x="576" y="1024" width="32" height="32"/>
   <object id="304" template="Objektvorlage.tx" x="416" y="1088"/>
  </objectgroup>
+ <objectgroup id="20" name="smallDot"/>
  <layer id="8" name="Tiled Punkte" width="56" height="50">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -442,5 +443,4 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="19" name="smallDot"/>
 </map>
