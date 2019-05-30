@@ -3,7 +3,6 @@ package pacman.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,18 +15,10 @@ import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.util.Random;
 
@@ -47,10 +38,10 @@ public class TiledTest2 extends ApplicationAdapter {
     private Rectangle wall;
     private long startTime = 0;
     //private TextureRegion geist;
-    private TextureRegion[] ghost = new TextureRegion[1];
+    private TextureRegion[] ghost = new TextureRegion[4];
     private MapLayer geisterLayer;
     private Texture geistBlau;
-    private Texture geistRot;
+    private Texture geistRot, geistRot2;
     private TextureRegion ghost1;
     // Punkte
     private TextureRegion[] punkt = new TextureRegion[4];
@@ -67,7 +58,8 @@ public class TiledTest2 extends ApplicationAdapter {
     private Random random;
     private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
     private int[][] punkteKoordinaten = {{64, 360}, {460, 720}, {1710, 820}, {920, 685}, {592, 600}};
-    private int[] deltaGhosts;
+    private int[][] geisterKoordinaten = {{400,776}, {40,776}, {1000,576}};
+    private int[][] deltaGhosts;
     private Texture gameOver;
     private TextureRegion gameOverRegion;
     private BitmapFont font;
@@ -125,25 +117,7 @@ public class TiledTest2 extends ApplicationAdapter {
         gameOver = new Texture(Gdx.files.internal("GameOver.jpg"));
         smallDot = new Texture("dotB.png");
 
-
-        //button = new ImageButton(button,250,250);
         imageButtonTextureRegion = new TextureRegion(imageButtonTexture,800,350);
-        //imageButtonDrawable = new TextureRegionDrawable(imageButtonTexture,250,250);
-
-        /*Label.LabelStyle label1Style = new Label.LabelStyle();
-        BitmapFont myFont = new BitmapFont(Gdx.files.internal("bitmapfont/Amble-Regular-26.fnt"));
-        label1Style.font = myFont;
-        label1Style.fontColor = Color.RED;
-
-        Label label1 = new Label("Title (BitmapFont)",label1Style);
-        label1.setSize(Gdx.graphics.getWidth(),32);
-        label1.setPosition(0,Gdx.graphics.getHeight()-32*2);
-        label1.setAlignment(Align.center);
-
-        imageButtonLayer.getObjects().add(new TextureMapObject(label1));*/
-
-
-
 
         TextureMapObject ib = new TextureMapObject(imageButtonTextureRegion);
         ib.setX(600);
@@ -151,6 +125,7 @@ public class TiledTest2 extends ApplicationAdapter {
         imageButtonLayer.getObjects().add(ib);
 
         gameOverRegion = new TextureRegion(gameOver,250,200);
+
         //Pacman
         regions[0] = new TextureRegion(texture, 0, 0, 32, 32);     // #3
         regions[1] = new TextureRegion(texture, 32, 0, 32, 32);    // #4
@@ -164,16 +139,29 @@ public class TiledTest2 extends ApplicationAdapter {
         tmo.setY(480);
         objectLayer.getObjects().add(tmo);
 
-        ghost[0] = new TextureRegion(geistRot,0,0,32,32);
+        /*TextureMapObject f = new TextureMapObject(new TextureRegion(geistRot,0,0,32,32));
+        f.setX(400);
+        f.setY(776);
+        geisterLayer.getObjects().add(f);
 
-        TextureMapObject g = new TextureMapObject(ghost[0]);
+        TextureMapObject g = new TextureMapObject(new TextureRegion(geistRot,0,0,32,32));
         g.setX(40);
         g.setY(776);
         geisterLayer.getObjects().add(g);
+*/
+        TextureRegion ghostRegion = new TextureRegion(geistRot,0,0,32,32);
+        for (int[] xy : geisterKoordinaten) {
+            TextureMapObject d = new TextureMapObject(ghostRegion);
+            d.setX(xy[0]);
+            d.setY(xy[1]);
+            geisterLayer.getObjects().add(d);
+        }
 
         random = new Random();
-        deltaGhosts = getDirection();
-
+        deltaGhosts = new int[3][3];
+        deltaGhosts[0] = getDirection();
+        deltaGhosts[1] = getDirection();
+        deltaGhosts[2] = getDirection();
         // Punkte
         TextureRegion punkt = new TextureRegion(dot,0,0,64,64);
         for (int[] xy : punkteKoordinaten) {
@@ -197,12 +185,6 @@ public class TiledTest2 extends ApplicationAdapter {
             sd.setY(rmo.getRectangle().getY());
             smallDotLayer.getObjects().add(sd);
         }
-
-        /*TextureMapObject sd = new TextureMapObject(smallDotRegion);
-        sd.setX(200);
-        sd.setY(480);
-        smallDotLayer.getObjects().add(sd);
-*/
     }
 
     private boolean isOverlapping(Rectangle rectangle, MapLayer layer) {
@@ -218,22 +200,16 @@ public class TiledTest2 extends ApplicationAdapter {
 
     private boolean isKreuzung(float x, float y, MapLayer layer) {
         MapObjects mapObjects = layer.getObjects();
-       // System.out.println(">isOverlapping");
-       // System.out.println(x + "/" + y);
         for (MapObject mapObject : mapObjects) {
             RectangleMapObject rectangleObject = (RectangleMapObject)mapObject;
-            //System.out.println(rectangleObject.getRectangle().getX() + "/" + rectangleObject.getRectangle().getY());
             float diffX = x - rectangleObject.getRectangle().getX();
             if (diffX < 0) diffX = diffX * -1;
 
             float diffY = y - rectangleObject.getRectangle().getY();
             if (diffY < 0) diffY = diffY * -1;
 
-           // System.out.println(diffX + "/" + diffY);
-           // System.out.println("hallo");
             if ((diffX == 0) && (diffY == 0)) return true;
         }
-        //System.out.println("<isOverlapping");
         return false;
     }
 
@@ -390,33 +366,34 @@ public class TiledTest2 extends ApplicationAdapter {
     private void moveGhosts() {
         MapObjects objects = tiledMap.getLayers().get("geister").getObjects();
         if (objects.getCount() > 0) {
-            TextureMapObject character = (TextureMapObject) objects.get(0);
-            float x = character.getX();
-            float y = character.getY();
+            int i = 0;
+            for (MapObject object : objects) {
+                TextureMapObject character = (TextureMapObject) object;
+                float x = character.getX();
+                float y = character.getY();
 
-            int[] delta = getDirection();
+                int[] delta = getDirection();
 
-            y = y;
-            y += deltaGhosts[0];
+                y += deltaGhosts[i][0];
+                x += deltaGhosts[i][1];
 
-            x = x;
-            x += deltaGhosts[1];
+                Rectangle rectangle = new Rectangle();
+                rectangle.setX(x);
+                rectangle.setY(y);
+                rectangle.setWidth(32);
+                rectangle.setHeight(32);
 
-            Rectangle rectangle = new Rectangle();
-            rectangle.setX(x);
-            rectangle.setY(y);
-            rectangle.setWidth(32);
-            rectangle.setHeight(32);
+                if (!isOverlapping(rectangle, wallLayer)) {
+                    character.setX(x);
+                    character.setY(y);
+                } else {
+                    deltaGhosts[i] = getDirection();
+                }
 
-            if (!isOverlapping(rectangle, wallLayer)) {
-                character.setX(x);
-                character.setY(y);
-            } else {
-                deltaGhosts = getDirection();
-            }
-
-            if (isKreuzung(x, y, kreuzungLayer)){
-                deltaGhosts = getDirection();
+                if (isKreuzung(x, y, kreuzungLayer)){
+                    deltaGhosts[i] = getDirection();
+                }
+                i++;
             }
         }
     }
