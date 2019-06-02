@@ -114,7 +114,7 @@ public class TiledTest2 extends ApplicationAdapter {
         geistBlau = new Texture("GeistG.png");
         geistRot = new Texture(Gdx.files.internal("GeistY.png"));
         dot = new Texture(Gdx.files.internal("dotA.png"));
-        gameOver = new Texture(Gdx.files.internal("GameOver.jpg"));
+        gameOver = new Texture(Gdx.files.internal("GameOver4.jpg"));
         smallDot = new Texture("dotB.png");
 
         imageButtonTextureRegion = new TextureRegion(imageButtonTexture,800,350);
@@ -124,7 +124,7 @@ public class TiledTest2 extends ApplicationAdapter {
         ib.setY(1000);
         imageButtonLayer.getObjects().add(ib);
 
-        gameOverRegion = new TextureRegion(gameOver,500,500);
+        gameOverRegion = new TextureRegion(gameOver,1000,1000);
 
         //Pacman
         regions[0] = new TextureRegion(texture, 0, 0, 32, 32);     // #3
