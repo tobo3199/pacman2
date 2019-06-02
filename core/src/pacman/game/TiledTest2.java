@@ -57,8 +57,8 @@ public class TiledTest2 extends ApplicationAdapter {
     private float r = 0;
     private Random random;
     private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
-    private int[][] punkteKoordinaten = {{64, 360}, {460, 720}, {1710, 820}, {920, 685}, {592, 600}};
-    private int[][] geisterKoordinaten = {{400,776}, {40,776}, {1000,576}};
+    private int[][] punkteKoordinaten = {{1392, 658}, {144, 752}, {1710, 817}, {915, 687}, {592, 596}};
+    private int[][] geisterKoordinaten = {{1728, 672}, {40, 776}, {1000, 576}, {608, 608}};
     private int[][] deltaGhosts;
     private Texture gameOver;
     private TextureRegion gameOverRegion;
@@ -124,7 +124,7 @@ public class TiledTest2 extends ApplicationAdapter {
         ib.setY(1000);
         imageButtonLayer.getObjects().add(ib);
 
-        gameOverRegion = new TextureRegion(gameOver,250,200);
+        gameOverRegion = new TextureRegion(gameOver,500,500);
 
         //Pacman
         regions[0] = new TextureRegion(texture, 0, 0, 32, 32);     // #3
@@ -158,10 +158,11 @@ public class TiledTest2 extends ApplicationAdapter {
         }
 
         random = new Random();
-        deltaGhosts = new int[3][3];
+        deltaGhosts = new int[4][4];
         deltaGhosts[0] = getDirection();
         deltaGhosts[1] = getDirection();
         deltaGhosts[2] = getDirection();
+        deltaGhosts[3] = getDirection();
         // Punkte
         TextureRegion punkt = new TextureRegion(dot,0,0,64,64);
         for (int[] xy : punkteKoordinaten) {
@@ -260,7 +261,7 @@ public class TiledTest2 extends ApplicationAdapter {
 
         //text += "1";
         String text = "Score: " + score;
-        font.draw(batch, text, 500, 1050);
+        font.draw(batch, text,  1500, 1550);
         batch.end();
     }
 
