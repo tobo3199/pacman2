@@ -3,6 +3,7 @@ package pacman.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,7 +23,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.util.Random;
 
-public class TiledTest2 extends ApplicationAdapter {
+public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     private Texture img;
     private TiledMap tiledMap;
     private OrthographicCamera camera;
@@ -139,16 +140,6 @@ public class TiledTest2 extends ApplicationAdapter {
         tmo.setY(480);
         objectLayer.getObjects().add(tmo);
 
-        /*TextureMapObject f = new TextureMapObject(new TextureRegion(geistRot,0,0,32,32));
-        f.setX(400);
-        f.setY(776);
-        geisterLayer.getObjects().add(f);
-
-        TextureMapObject g = new TextureMapObject(new TextureRegion(geistRot,0,0,32,32));
-        g.setX(40);
-        g.setY(776);
-        geisterLayer.getObjects().add(g);
-*/
         TextureRegion ghostRegion = new TextureRegion(geistRot,0,0,32,32);
         for (int[] xy : geisterKoordinaten) {
             TextureMapObject d = new TextureMapObject(ghostRegion);
@@ -176,6 +167,7 @@ public class TiledTest2 extends ApplicationAdapter {
         sprite = new Sprite(geistRot);
 
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
+        font.getData().setScale(2);
 
         smallDotRegion = new TextureRegion(smallDot,32,32);
 
@@ -186,6 +178,8 @@ public class TiledTest2 extends ApplicationAdapter {
             sd.setY(rmo.getRectangle().getY());
             smallDotLayer.getObjects().add(sd);
         }
+
+        Gdx.input.setInputProcessor(this);
     }
 
     private boolean isOverlapping(Rectangle rectangle, MapLayer layer) {
@@ -241,10 +235,6 @@ public class TiledTest2 extends ApplicationAdapter {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            System.out.println("hallo");
-        }
 
         //ghosts
         moveGhosts();
@@ -401,6 +391,51 @@ public class TiledTest2 extends ApplicationAdapter {
 
     private int[] getDirection() {
         return delta[random.nextInt(4)];
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (button == 0) {
+            if (screenX <= 1400 && screenX >= 600 && screenY >= 350 && screenY <= 700)
+            //System.out.println("touchUp" + screenX);
+            System.out.println("touchUp" + screenY);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
 
