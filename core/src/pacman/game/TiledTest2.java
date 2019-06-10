@@ -71,6 +71,17 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     private TextureRegionDrawable imageButtonDrawable;
     private ImageButton button;
     private MapLayer imageButtonLayer;
+    private Texture startButton;
+    private Texture stopButton;
+    private Texture restartButton;
+    private TextureRegion startRegion;
+    private TextureRegion restartRegion;
+    private TextureRegion stopRegion;
+    private TextureRegionDrawable startDrawable;
+    private TextureRegionDrawable restartDrawable;
+    private TextureRegionDrawable stopDrawable;
+
+    //Scoreboard
     private int score = 0;
 
     //kleine Punkte
@@ -118,13 +129,43 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         gameOver = new Texture(Gdx.files.internal("GameOver4.jpg"));
         smallDot = new Texture("dotB.png");
 
-        imageButtonTextureRegion = new TextureRegion(imageButtonTexture,800,350);
+        //startButton
+        startButton = new Texture(Gdx.files.internal("START1.jpg"));
+        startRegion = new TextureRegion(startButton);
+        startDrawable = new TextureRegionDrawable(startRegion);
 
-        TextureMapObject ib = new TextureMapObject(imageButtonTextureRegion);
-        ib.setX(600);
-        ib.setY(1000);
-        imageButtonLayer.getObjects().add(ib);
+        TextureMapObject st = new TextureMapObject(startRegion);
+        st.setX(50);
+        st.setY(1400);
+        imageButtonLayer.getObjects().add(st);
 
+        //startRegion = new TextureRegion(startButton,50,300);
+
+        //restrtButton
+        restartButton = new Texture(Gdx.files.internal("RESTART1.png"));
+        restartRegion = new TextureRegion(restartButton);
+        restartDrawable = new TextureRegionDrawable(restartRegion);
+
+        TextureMapObject re = new TextureMapObject(restartRegion);
+        re.setX(1000);
+        re.setY(1400);
+        imageButtonLayer.getObjects().add(re);
+
+        //restartRegion = new TextureRegion(restartButton,800,350);
+
+        //stopButton
+        stopButton = new Texture(Gdx.files.internal("STOP.png"));
+        stopRegion = new TextureRegion(stopButton);
+        stopDrawable = new TextureRegionDrawable(stopRegion);
+
+        TextureMapObject sto = new TextureMapObject(stopRegion);
+        sto.setX(500);
+        sto.setY(1400);
+        imageButtonLayer.getObjects().add(sto);
+
+        //stopRegion = new TextureRegion(stopButton,800,350);
+
+        //gameOverBild
         gameOverRegion = new TextureRegion(gameOver,1000,1000);
 
         //Pacman
@@ -178,6 +219,8 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
             sd.setY(rmo.getRectangle().getY());
             smallDotLayer.getObjects().add(sd);
         }
+
+        score = 0;
 
         Gdx.input.setInputProcessor(this);
     }
@@ -237,7 +280,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //ghosts
-        moveGhosts();
+        moveG hosts();
 
         //pacman
         movePacman();
@@ -415,10 +458,19 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        System.out.println("touchUp" + screenX);
+        System.out.println("touchUp" + screenY);
         if (button == 0) {
-            if (screenX <= 1400 && screenX >= 600 && screenY >= 350 && screenY <= 700)
-            //System.out.println("touchUp" + screenX);
-            System.out.println("touchUp" + screenY);
+            //startButton
+            if (screenX >= 50 && screenX <= 480 &&  screenY >= 130 && screenY <= 300) {
+                System.out.println("Start Button");
+                create();
+            }
+
+            //stop button
+            if (screenX <= 1400 && screenX >= 600 && screenY >= 350 && screenY <= 700) {
+
+            }
         }
         return false;
     }
