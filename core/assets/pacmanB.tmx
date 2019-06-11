@@ -221,7 +221,6 @@
  </layer>
  <objectgroup id="5" name="objects"/>
  <objectgroup id="12" name="punkte"/>
- <objectgroup id="10" name="geister"/>
  <objectgroup id="6" name="wall" visible="0">
   <object id="86" x="0" y="704" width="1792" height="32"/>
   <object id="87" x="0" y="1120" width="1792" height="32"/>
@@ -308,7 +307,7 @@
   <object id="203" x="1024" y="800" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="17" name="button"/>
- <objectgroup id="16" name="scorePunkte" visible="0">
+ <objectgroup id="16" name="scorePunkte">
   <object id="225" x="32" y="736" width="32" height="32"/>
   <object id="226" x="32" y="768" width="32" height="32"/>
   <object id="227" x="32" y="800" width="32" height="32"/>
@@ -618,11 +617,11 @@
   <object id="585" x="1568" y="960" width="32" height="32"/>
   <object id="586" x="1568" y="992" width="32" height="32"/>
   <object id="587" x="224" y="800" width="32" height="32"/>
-  <object id="588" x="435" y="526"/>
   <object id="590" x="480" y="832" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="20" name="smallDot"/>
  <objectgroup id="14" name="GameOver"/>
+ <objectgroup id="10" name="geister"/>
  <layer id="8" name="Tiled Punkte" width="56" height="50">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

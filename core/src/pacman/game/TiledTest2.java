@@ -38,6 +38,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     private Rectangle rectanglepacmanY;
     private Rectangle wall;
     private long startTime = 0;
+    private boolean stop = false;
     //private TextureRegion geist;
     private TextureRegion[] ghost = new TextureRegion[4];
     private MapLayer geisterLayer;
@@ -126,7 +127,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         geistBlau = new Texture("GeistG.png");
         geistRot = new Texture(Gdx.files.internal("GeistY.png"));
         dot = new Texture(Gdx.files.internal("dotA.png"));
-        gameOver = new Texture(Gdx.files.internal("GameOver4.jpg"));
+        gameOver = new Texture(Gdx.files.internal("GameOver.jpg"));
         smallDot = new Texture("dotB.png");
 
         //startButton
@@ -166,7 +167,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         //stopRegion = new TextureRegion(stopButton,800,350);
 
         //gameOverBild
-        gameOverRegion = new TextureRegion(gameOver,1000,1000);
+        gameOverRegion = new TextureRegion(gameOver,250,200);
 
         //Pacman
         regions[0] = new TextureRegion(texture, 0, 0, 32, 32);     // #3
@@ -279,11 +280,14 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //ghosts
-        moveG hosts();
+        if (!stop) {
+            //ghosts
+            moveGhosts();
 
-        //pacman
-        movePacman();
+            //pacman
+            movePacman();
+
+        }
 
         //render
         camera.update();
@@ -348,8 +352,8 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         Rectangle pacmanRectangle = new Rectangle();
         pacmanRectangle.setX(x + 8);
         pacmanRectangle.setY(y + 8);
-        pacmanRectangle.setWidth(20);
-        pacmanRectangle.setHeight(20);
+        pacmanRectangle.setWidth(17);
+        pacmanRectangle.setHeight(17);
 
         if (!isOverlapping(pacmanRectangle, wallLayer)) {
             character.setX(x);
@@ -359,9 +363,12 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
                 if(startTime == 0){
                     //GameOver Zeichen
                     TextureMapObject go = new TextureMapObject(gameOverRegion);
-                    go.setX(500);
-                    go.setY(500);
+                    go.setX(700);
+                    go.setY(950);
                     gameOverLayer.getObjects().add(go);
+
+                    stop = true;
+
                 } else {
                     score += 200;
                 }
@@ -464,12 +471,17 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
             //startButton
             if (screenX >= 50 && screenX <= 480 &&  screenY >= 130 && screenY <= 300) {
                 System.out.println("Start Button");
-                create();
+                    stop = false;
             }
 
-            //stop button
-            if (screenX <= 1400 && screenX >= 600 && screenY >= 350 && screenY <= 700) {
-
+            //restartButton
+            if (screenX >= 1000 && screenX <= 1430 && screenY >= 135 && screenY <= 300) {
+                create();
+                stop = false;
+            }
+            //stopButton
+            if (screenX <= 880 && screenX >= 555 && screenY >= 130 && screenY <= 250) {
+                stop = true;
             }
         }
         return false;
