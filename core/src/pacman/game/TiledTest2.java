@@ -62,7 +62,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
     private int[][] punkteKoordinaten = {{1392, 658}, {144, 752}, {1710, 817}, {915, 687}, {592, 596}};
     private int[][] geisterKoordinaten = {{1728, 672}, {40, 776}, {1000, 576}, {608, 608}};
-    private int[][] geisterKoordinaten2 = {{1728, 672}, {40, 776}, {1000, 576}, {608, 608}, {1280, 832}};
+    private int[][] geisterKoordinaten2 = {{1728, 672}, {40, 776}, {1000, 576}, {608, 608}, {1280, 832}, {480, 736}};
     private int[][] deltaGhosts;
     private Texture gameOver;
     private TextureRegion gameOverRegion;
@@ -533,12 +533,13 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
                 }
 
                 random = new Random();
-                deltaGhosts = new int[5][5];
+                deltaGhosts = new int[6][6];
                 deltaGhosts[0] = getDirection();
                 deltaGhosts[1] = getDirection();
                 deltaGhosts[2] = getDirection();
                 deltaGhosts[3] = getDirection();
                 deltaGhosts[4] = getDirection();
+                deltaGhosts[5] = getDirection();
             }
 
         }
