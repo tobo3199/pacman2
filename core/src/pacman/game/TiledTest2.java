@@ -39,6 +39,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     private Rectangle wall;
     private long startTime = 0;
     private boolean stop = false;
+    private boolean e = false;
     //private TextureRegion geist;
     private TextureRegion[] ghost = new TextureRegion[4];
     private MapLayer geisterLayer;
@@ -61,10 +62,12 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     private int[][] delta = {{0,-8},{0,8},{8,0}, {-8,0}};
     private int[][] punkteKoordinaten = {{1392, 658}, {144, 752}, {1710, 817}, {915, 687}, {592, 596}};
     private int[][] geisterKoordinaten = {{1728, 672}, {40, 776}, {1000, 576}, {608, 608}};
+    private int[][] geisterKoordinaten2 = {{1728, 672}, {40, 776}, {1000, 576}, {608, 608}, {1280, 832}};
     private int[][] deltaGhosts;
     private Texture gameOver;
     private TextureRegion gameOverRegion;
     private BitmapFont font;
+
 
     //ImageButton
     private Texture imageButtonTexture;
@@ -78,9 +81,12 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     private TextureRegion startRegion;
     private TextureRegion restartRegion;
     private TextureRegion stopRegion;
-    private TextureRegionDrawable startDrawable;
-    private TextureRegionDrawable restartDrawable;
-    private TextureRegionDrawable stopDrawable;
+
+    //Level 1 & 2
+    private Texture Level1Texture;
+    private Texture Level2Texture;
+    private  TextureRegion Level1Region;
+    private TextureRegion Level2Region;
 
     //Scoreboard
     private int score = 0;
@@ -103,7 +109,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         camera.setToOrtho(false, w, h);
         camera.update();
 
-        imageButtonTexture = new Texture("StartButton.png");
+        imageButtonTexture = new Texture("ButtonStart.png");
         imageButtonTextureRegion = new TextureRegion(imageButtonTexture);
         imageButtonDrawable = new TextureRegionDrawable(imageButtonTextureRegion);
         button = new ImageButton(imageButtonDrawable);
@@ -131,40 +137,51 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         smallDot = new Texture("dotB.png");
 
         //startButton
-        startButton = new Texture(Gdx.files.internal("START1.jpg"));
+        startButton = new Texture(Gdx.files.internal("ButtonStart1.png"));
         startRegion = new TextureRegion(startButton);
-        startDrawable = new TextureRegionDrawable(startRegion);
 
         TextureMapObject st = new TextureMapObject(startRegion);
-        st.setX(50);
-        st.setY(1400);
+        st.setX(-100);
+        st.setY(1265);
         imageButtonLayer.getObjects().add(st);
 
-        //startRegion = new TextureRegion(startButton,50,300);
-
-        //restrtButton
-        restartButton = new Texture(Gdx.files.internal("RESTART1.png"));
+        //restartButton
+        restartButton = new Texture(Gdx.files.internal("ButtonRestart1.png"));
         restartRegion = new TextureRegion(restartButton);
-        restartDrawable = new TextureRegionDrawable(restartRegion);
 
         TextureMapObject re = new TextureMapObject(restartRegion);
-        re.setX(1000);
+        re.setX(1020);
         re.setY(1400);
         imageButtonLayer.getObjects().add(re);
+
+        //Level 1
+        Level1Texture = new Texture(Gdx.files.internal("Level1.png"));
+        Level1Region = new TextureRegion(Level1Texture);
+
+        TextureMapObject lr = new TextureMapObject(Level1Region);
+        lr.setX(50);
+        lr.setY(100);
+        imageButtonLayer.getObjects().add(lr);
+
+        //Level 2
+        Level2Texture = new Texture(Gdx.files.internal("Level2.png"));
+        Level2Region = new TextureRegion(Level2Texture);
+
+        TextureMapObject l2 = new TextureMapObject(Level2Region);
+        l2.setX(500);
+        l2.setY(100);
+        imageButtonLayer.getObjects().add(l2);
 
         //restartRegion = new TextureRegion(restartButton,800,350);
 
         //stopButton
-        stopButton = new Texture(Gdx.files.internal("STOP.png"));
+        stopButton = new Texture(Gdx.files.internal("ButtonStop1.png"));
         stopRegion = new TextureRegion(stopButton);
-        stopDrawable = new TextureRegionDrawable(stopRegion);
 
         TextureMapObject sto = new TextureMapObject(stopRegion);
-        sto.setX(500);
+        sto.setX(550);
         sto.setY(1400);
         imageButtonLayer.getObjects().add(sto);
-
-        //stopRegion = new TextureRegion(stopButton,800,350);
 
         //gameOverBild
         gameOverRegion = new TextureRegion(gameOver,250,200);
@@ -182,7 +199,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         tmo.setY(480);
         objectLayer.getObjects().add(tmo);
 
-        TextureRegion ghostRegion = new TextureRegion(geistRot,0,0,32,32);
+        /*TextureRegion ghostRegion = new TextureRegion(geistRot,0,0,32,32);
         for (int[] xy : geisterKoordinaten) {
             TextureMapObject d = new TextureMapObject(ghostRegion);
             d.setX(xy[0]);
@@ -195,7 +212,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         deltaGhosts[0] = getDirection();
         deltaGhosts[1] = getDirection();
         deltaGhosts[2] = getDirection();
-        deltaGhosts[3] = getDirection();
+        deltaGhosts[3] = getDirection(); */
         // Punkte
         TextureRegion punkt = new TextureRegion(dot,0,0,64,64);
         for (int[] xy : punkteKoordinaten) {
@@ -350,10 +367,10 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
 
         //pacman Bewegung
         Rectangle pacmanRectangle = new Rectangle();
-        pacmanRectangle.setX(x + 8);
-        pacmanRectangle.setY(y + 8);
-        pacmanRectangle.setWidth(17);
-        pacmanRectangle.setHeight(17);
+        pacmanRectangle.setX(x + 9);
+        pacmanRectangle.setY(y + 9);
+        pacmanRectangle.setWidth(16);
+        pacmanRectangle.setHeight(16);
 
         if (!isOverlapping(pacmanRectangle, wallLayer)) {
             character.setX(x);
@@ -382,7 +399,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
             }
         }
 
-        if(TimeUtils.timeSinceMillis(startTime) > 5000) {
+        if(TimeUtils.timeSinceMillis(startTime) > 8000) {
             // timer ist nach 5 Sekunden zu Ende
             startTime = 0;
 
@@ -469,20 +486,61 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         System.out.println("touchUp" + screenY);
         if (button == 0) {
             //startButton
-            if (screenX >= 50 && screenX <= 480 &&  screenY >= 130 && screenY <= 300) {
+            if (screenX >= 90 && screenX <= 520 &&  screenY >= 180 && screenY <= 360) {
                 System.out.println("Start Button");
                     stop = false;
             }
 
             //restartButton
-            if (screenX >= 1000 && screenX <= 1430 && screenY >= 135 && screenY <= 300) {
+            if (screenX >= 1020 && screenX <= 1430 && screenY >= 135 && screenY <= 300) {
                 create();
-                stop = false;
-            }
-            //stopButton
-            if (screenX <= 880 && screenX >= 555 && screenY >= 130 && screenY <= 250) {
                 stop = true;
             }
+            //stopButton
+            if (screenX <= 960 && screenX >= 550 && screenY >= 150 && screenY <= 300) {
+                stop = true;
+            }
+            //Level1
+            if (screenX <= 460 && screenX >= 50 && screenY >= 1450 && screenY <= 1600) {
+                stop = true;
+
+                TextureRegion ghostRegion = new TextureRegion(geistRot,0,0,32,32);
+                for (int[] xy : geisterKoordinaten) {
+                    TextureMapObject d = new TextureMapObject(ghostRegion);
+                    d.setX(xy[0]);
+                    d.setY(xy[1]);
+                    geisterLayer.getObjects().add(d);
+                }
+
+                random = new Random();
+                deltaGhosts = new int[4][4];
+                deltaGhosts[0] = getDirection();
+                deltaGhosts[1] = getDirection();
+                deltaGhosts[2] = getDirection();
+                deltaGhosts[3] = getDirection();
+
+            }
+            //Level2
+            if (screenX <= 910 && screenX >= 500 && screenY >= 1450 && screenY <= 1600) {
+                stop = true;
+
+                TextureRegion ghostRegion = new TextureRegion(geistRot,0,0,32,32);
+                for (int[] xy : geisterKoordinaten2) {
+                    TextureMapObject d = new TextureMapObject(ghostRegion);
+                    d.setX(xy[0]);
+                    d.setY(xy[1]);
+                    geisterLayer.getObjects().add(d);
+                }
+
+                random = new Random();
+                deltaGhosts = new int[5][5];
+                deltaGhosts[0] = getDirection();
+                deltaGhosts[1] = getDirection();
+                deltaGhosts[2] = getDirection();
+                deltaGhosts[3] = getDirection();
+                deltaGhosts[4] = getDirection();
+            }
+
         }
         return false;
     }
