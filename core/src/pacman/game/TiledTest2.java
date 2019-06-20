@@ -24,7 +24,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import java.util.Random;
 
 public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
-    private Texture img;
     private TiledMap tiledMap;
     private OrthographicCamera camera;
     private OrthogonalTiledMapRendererWithSprites tiledMapRenderer;
@@ -73,7 +72,6 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
     private Texture imageButtonTexture;
     private TextureRegion imageButtonTextureRegion;
     private TextureRegionDrawable imageButtonDrawable;
-    private ImageButton button;
     private MapLayer imageButtonLayer;
     private Texture startButton;
     private Texture stopButton;
@@ -112,7 +110,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         imageButtonTexture = new Texture("ButtonStart.png");
         imageButtonTextureRegion = new TextureRegion(imageButtonTexture);
         imageButtonDrawable = new TextureRegionDrawable(imageButtonTextureRegion);
-        button = new ImageButton(imageButtonDrawable);
+
 
         tiledMap = new TmxMapLoader().load("pacmanB.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(tiledMap);
@@ -199,20 +197,6 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         tmo.setY(480);
         objectLayer.getObjects().add(tmo);
 
-        /*TextureRegion ghostRegion = new TextureRegion(geistRot,0,0,32,32);
-        for (int[] xy : geisterKoordinaten) {
-            TextureMapObject d = new TextureMapObject(ghostRegion);
-            d.setX(xy[0]);
-            d.setY(xy[1]);
-            geisterLayer.getObjects().add(d);
-        }
-
-        random = new Random();
-        deltaGhosts = new int[4][4];
-        deltaGhosts[0] = getDirection();
-        deltaGhosts[1] = getDirection();
-        deltaGhosts[2] = getDirection();
-        deltaGhosts[3] = getDirection(); */
         // Punkte
         TextureRegion punkt = new TextureRegion(dot,0,0,64,64);
         for (int[] xy : punkteKoordinaten) {
@@ -400,7 +384,7 @@ public class TiledTest2 extends ApplicationAdapter implements InputProcessor {
         }
 
         if(TimeUtils.timeSinceMillis(startTime) > 8000) {
-            // timer ist nach 5 Sekunden zu Ende
+            // timer ist nach 8 Sekunden zu Ende
             startTime = 0;
 
             changeRegion(geistRot);
